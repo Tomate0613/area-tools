@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.doublekekse.area_lib.command.argument.AreaArgument;
 import dev.doublekekse.area_tools.data.AreaToolsSavedData;
-import dev.doublekekse.area_tools.data.TrackItem;
+import dev.doublekekse.area_tools.data.TrackedAreaItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
@@ -63,7 +63,7 @@ public class AreaTrackCommand {
         );
     }
 
-    static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<TrackItem, List<String>> lookup) {
+    static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<TrackedAreaItem, List<String>> lookup) {
         base.then(literal(trackEvent).then(literal("add").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");

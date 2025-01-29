@@ -1,6 +1,5 @@
 package dev.doublekekse.area_tools.mixin;
 
-import dev.doublekekse.area_tools.data.TrackItem;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

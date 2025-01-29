@@ -12,42 +12,42 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
 public class TrackBVHTree {
-    private BVHNode<TrackItem> node;
+    private BVHNode<TrackedAreaItem> node;
     private final AreaSavedData savedData;
 
     public TrackBVHTree(AreaSavedData savedData) {
         this.savedData = savedData;
     }
 
-    public void add(TrackItem trackItem) {
+    public void add(TrackedAreaItem trackedAreaItem) {
         if (node == null) {
-            node = new BVHNode<>(savedData, Collections.singletonList(trackItem));
+            node = new BVHNode<>(savedData, Collections.singletonList(trackedAreaItem));
             return;
         }
 
-        node = node.with(savedData, trackItem);
+        node = node.with(savedData, trackedAreaItem);
     }
 
-    public void remove(TrackItem trackItem) {
+    public void remove(TrackedAreaItem trackedAreaItem) {
         if (node == null) {
             return;
         }
 
-        node = node.without(savedData, trackItem);
+        node = node.without(savedData, trackedAreaItem);
     }
 
-    public Optional<TrackItem> get(ResourceLocation areaId) {
+    public Optional<TrackedAreaItem> get(ResourceLocation areaId) {
         return listAllItems().stream().filter((trackItem) -> trackItem.areaId.equals(areaId)).findAny();
     }
 
-    public TrackItem getOrCreate(ResourceLocation areaId) {
+    public TrackedAreaItem getOrCreate(ResourceLocation areaId) {
         var existing = get(areaId);
 
         if (existing.isPresent()) {
             return existing.get();
         }
 
-        var item = new TrackItem();
+        var item = new TrackedAreaItem();
         item.areaId = areaId;
         item.area = savedData.get(areaId);
 
@@ -63,7 +63,7 @@ public class TrackBVHTree {
         return node.contains(level, position);
     }
 
-    public List<TrackItem> findAreasContaining(Level level, Vec3 position) {
+    public List<TrackedAreaItem> findAreasContaining(Level level, Vec3 position) {
         if (node == null) {
             return Collections.emptyList();
         }
@@ -71,7 +71,7 @@ public class TrackBVHTree {
         return node.findAreasContaining(level, position);
     }
 
-    public List<TrackItem> listAllItems() {
+    public List<TrackedAreaItem> listAllItems() {
         if (node == null) {
             return Collections.emptyList();
         }
@@ -95,10 +95,10 @@ public class TrackBVHTree {
 
     public void load(CompoundTag tag) {
         var listTag = tag.getList("track_items", Tag.TAG_COMPOUND);
-        var items = new ArrayList<TrackItem>();
+        var items = new ArrayList<TrackedAreaItem>();
 
         for (var itemTag : listTag) {
-            items.add(TrackItem.of(savedData, (CompoundTag) itemTag));
+            items.add(TrackedAreaItem.of(savedData, (CompoundTag) itemTag));
         }
 
         node = new BVHNode<>(savedData, items);

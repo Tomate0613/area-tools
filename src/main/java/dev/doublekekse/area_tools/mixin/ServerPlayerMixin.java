@@ -3,7 +3,7 @@ package dev.doublekekse.area_tools.mixin;
 import com.mojang.authlib.GameProfile;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.data.AreaToolsSavedData;
-import dev.doublekekse.area_tools.data.TrackItem;
+import dev.doublekekse.area_tools.data.TrackedAreaItem;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -28,7 +28,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Final
     public MinecraftServer server;
     @Unique
-    List<TrackItem> oldTrackItems;
+    List<TrackedAreaItem> oldTrackedAreaItems;
     @Unique
     AreaToolsSavedData data;
 
@@ -39,15 +39,15 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Inject(method = "<init>", at = @At("RETURN"))
     void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
         data = AreaToolsSavedData.getServerData(minecraftServer);
-        oldTrackItems = data.trackedAreas.findAreasContaining(level(), position());
+        oldTrackedAreaItems = data.trackedAreas.findAreasContaining(level(), position());
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         var trackItems = data.trackedAreas.findAreasContaining(level(), position());
 
-        var newItems = trackItems.stream().filter(a -> !oldTrackItems.contains(a));
-        var oldItems = oldTrackItems.stream().filter(a -> !trackItems.contains(a));
+        var newItems = trackItems.stream().filter(a -> !oldTrackedAreaItems.contains(a));
+        var oldItems = oldTrackedAreaItems.stream().filter(a -> !trackItems.contains(a));
 
         newItems.forEach(area -> {
             AreaTools.runCommands(server, this, area.onEnter);
@@ -57,11 +57,11 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
             AreaTools.runCommands(server, this, area.onExit);
         });
 
-        oldTrackItems = trackItems;
+        oldTrackedAreaItems = trackItems;
     }
 
     @Override
-    public List<TrackItem> area_tools$getAreas() {
-        return oldTrackItems;
+    public List<TrackedAreaItem> area_tools$getAreas() {
+        return oldTrackedAreaItems;
     }
 }

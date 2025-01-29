@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class TrackItem implements BVHItem {
+public class TrackedAreaItem implements BVHItem {
     public ResourceLocation areaId;
     public Area area;
 
@@ -25,8 +25,8 @@ public class TrackItem implements BVHItem {
     public float respawnYaw;
 
 
-    public static TrackItem of(AreaSavedData savedData, CompoundTag tag) {
-        var data = new TrackItem();
+    public static TrackedAreaItem of(AreaSavedData savedData, CompoundTag tag) {
+        var data = new TrackedAreaItem();
         data.load(savedData, tag);
 
         return data;
