@@ -7,6 +7,7 @@ import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +28,22 @@ public abstract class ItemStackMixin {
     @Shadow
     @Final
     PatchedDataComponentMap components;
+
+    @Shadow public abstract void setCount(int i);
+
+    @Inject(method = "inventoryTick", at = @At("HEAD"))
+    void tick(Level level, Entity entity, int i, boolean bl, CallbackInfo ci) {
+        if (!components.has(AreaComponents.DISSOLVE_COMPONENT)) {
+            return;
+        }
+
+        var component = components.get(AreaComponents.DISSOLVE_COMPONENT);
+        assert component != null;
+
+        if (!component.isInArea(entity)) {
+            setCount(0);
+        }
+    }
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     void use(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
