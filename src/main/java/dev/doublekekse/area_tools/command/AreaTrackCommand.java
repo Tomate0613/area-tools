@@ -44,6 +44,7 @@ public class AreaTrackCommand {
                 var item = trackedAreas.getOrCreate(area.getKey());
 
                 item.respawnPoint = position;
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
 
                 return 1;
             }).then(argument("yaw", FloatArgumentType.floatArg()).executes(ctx -> {
@@ -57,6 +58,7 @@ public class AreaTrackCommand {
 
                 item.respawnPoint = position;
                 item.respawnYaw = yaw;
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
 
                 return 1;
             })))))
@@ -75,6 +77,8 @@ public class AreaTrackCommand {
             lookup.apply(trackItem).add(command);
             data.setDirty();
 
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".add", command), false);
+
             return 1;
         })))).then(literal("remove").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
             var area = AreaArgument.getAreaId(ctx, "area");
@@ -84,10 +88,12 @@ public class AreaTrackCommand {
 
             var trackItem = trackedAreas.get(area);
             if (trackItem.isEmpty()) {
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;
             }
 
             lookup.apply(trackItem.get()).remove(command);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".remove", command), false);
 
             if (trackItem.get().isEmpty()) {
                 trackedAreas.remove(trackItem.get());
@@ -104,7 +110,7 @@ public class AreaTrackCommand {
 
             var trackItem = trackedAreas.get(area);
             if (trackItem.isEmpty()) {
-                ctx.getSource().sendFailure(Component.literal("Not tracked"));
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;
             }
 
@@ -114,7 +120,7 @@ public class AreaTrackCommand {
 
             for (var command : commands) {
                 var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/area_track on_enter remove %s %s", area.toString(), command))).withColor(ChatFormatting.AQUA);
-                ctx.getSource().sendSuccess(() -> Component.literal(command).append(Component.literal(" [remove]").withStyle(style)), false);
+                ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_track.track_event.list.remove").withStyle(style)), false);
             }
 
             return 1;
