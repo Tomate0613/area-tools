@@ -1,3 +1,18 @@
 {
-  "item.area_tools.area_creator": "Area Creator"
+  "item.area_tools.area_creator": "Area Creator",
+  "item.area_tools.area_component.can_use_in_area": "Area restricted",
+  "item.area_tools.area_component.can_use_in_area.creative": "Area restricted to %s",
+  "item.area_tools.area_component.dissolve": "Dissolves",
+  "item.area_tools.area_component.dissolve.creative": "Dissolves outside of %s",
+
+  "commands.area_tools.area_track.spawnpoint": "Updated area spawnpoint",
+
+  "commands.area_tools.area_track.on_enter.add": "Added %s to on_enter",
+  "commands.area_tools.area_track.on_enter.remove": "Removed %s to on_enter",
+
+  "commands.area_tools.area_track.on_exit.add": "Added %s to on_exit",
+  "commands.area_tools.area_track.on_exit.remove": "Removed %s to on_exit",
+
+  "commands.area_tools.area_track.track_event.list.not_tracked": "Not tracked",
+  "commands.area_tools.area_track.track_event.list.remove": "[remove]"
 }

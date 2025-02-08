@@ -11,7 +11,7 @@ public class AreaComponents {
         DataComponentType.<AreaComponent>builder().persistent(AreaComponent.CODEC).networkSynchronized(AreaComponent.STREAM_CODEC).cacheEncoding().build(),
         "can_use_in_area"
     );
-    public static final DataComponentType<AreaComponent> DISSOLVE_COMPONENT = register(
+    public static final DataComponentType<AreaComponent> DISSOLVE = register(
         DataComponentType.<AreaComponent>builder().persistent(AreaComponent.CODEC).networkSynchronized(AreaComponent.STREAM_CODEC).cacheEncoding().build(),
         "dissolve"
     );
