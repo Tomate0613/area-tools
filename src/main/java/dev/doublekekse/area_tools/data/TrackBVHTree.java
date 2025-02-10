@@ -21,11 +21,11 @@ public class TrackBVHTree {
 
     public void add(TrackedAreaItem trackedAreaItem) {
         if (node == null) {
-            node = new BVHNode<>(savedData, Collections.singletonList(trackedAreaItem));
+            node = new BVHNode<>(Collections.singletonList(trackedAreaItem));
             return;
         }
 
-        node = node.with(savedData, trackedAreaItem);
+        node = node.with(trackedAreaItem);
     }
 
     public void remove(TrackedAreaItem trackedAreaItem) {
@@ -33,7 +33,7 @@ public class TrackBVHTree {
             return;
         }
 
-        node = node.without(savedData, trackedAreaItem);
+        node = node.without(trackedAreaItem);
     }
 
     public Optional<TrackedAreaItem> get(ResourceLocation areaId) {
@@ -101,6 +101,6 @@ public class TrackBVHTree {
             items.add(TrackedAreaItem.of(savedData, (CompoundTag) itemTag));
         }
 
-        node = new BVHNode<>(savedData, items);
+        node = new BVHNode<>(items);
     }
 }

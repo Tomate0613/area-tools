@@ -114,7 +114,7 @@ public class TrackedAreaItem implements BVHItem {
     }
 
     @Override
-    public @Nullable AABB getBoundingBox(AreaSavedData areaSavedData) {
-        return area.getBoundingBox(areaSavedData);
+    public @Nullable AABB getBoundingBox() {
+        return area.getBoundingBox();
     }
 }
