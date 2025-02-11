@@ -19,6 +19,11 @@ public class AreaCreatorItem extends Item {
         super(properties);
     }
 
+    @Override
+    public boolean isFoil(ItemStack itemStack) {
+        return true;
+    }
+
     public static BlockPos getPos(Player player) {
         var hit = player.pick(6, 0, false);
 
