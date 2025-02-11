@@ -1,5 +1,7 @@
 {
   "item.area_tools.area_creator": "Area Creator",
+  "item.area_tools.spawnpoint_setter": "Area Spawnpoint Setter",
+
   "item.area_tools.area_component.can_use_in_area": "Area restricted",
   "item.area_tools.area_component.can_use_in_area.creative": "Area restricted to %s",
   "item.area_tools.area_component.dissolve": "Dissolves",
