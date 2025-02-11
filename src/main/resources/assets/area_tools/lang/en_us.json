@@ -6,12 +6,13 @@
   "item.area_tools.area_component.dissolve.creative": "Dissolves outside of %s",
 
   "commands.area_tools.area_track.spawnpoint": "Updated area spawnpoint",
+  "commands.area_tools.area_track.spawnpoint.clear": "Cleared area spawnpoint",
 
   "commands.area_tools.area_track.on_enter.add": "Added %s to on_enter",
   "commands.area_tools.area_track.on_enter.remove": "Removed %s to on_enter",
 
   "commands.area_tools.area_track.on_exit.add": "Added %s to on_exit",
-  "commands.area_tools.area_track.on_exit.remove": "Removed %s to on_exit",
+  "commands.area_tools.area_track.on_exit.remove": "Removed %s from on_exit",
 
   "commands.area_tools.area_track.track_event.list.not_tracked": "Not tracked",
   "commands.area_tools.area_track.track_event.list.remove": "[remove]"

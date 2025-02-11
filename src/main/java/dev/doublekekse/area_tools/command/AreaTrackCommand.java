@@ -61,7 +61,29 @@ public class AreaTrackCommand {
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
 
                 return 1;
-            })))))
+            }))).then(literal("clear").executes(ctx -> {
+                var area = AreaArgument.getArea(ctx, "area");
+
+                var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
+                var trackedAreas = data.trackedAreas;
+                var item = trackedAreas.get(area.getKey());
+
+                if(item.isEmpty()) {
+                    ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
+                    return 0;
+                }
+
+                item.get().respawnPoint = null;
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint.clear"), false);
+
+                if (item.get().isEmpty()) {
+                    trackedAreas.remove(item.get());
+                }
+
+                data.setDirty();
+
+                return 1;
+            }))))
         );
     }
 
