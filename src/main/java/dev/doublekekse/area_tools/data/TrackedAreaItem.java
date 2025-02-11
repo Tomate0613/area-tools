@@ -94,7 +94,7 @@ public class TrackedAreaItem implements BVHItem {
     }
 
     public boolean isEmpty() {
-        return onEnter.isEmpty() && onExit.isEmpty();
+        return onEnter.isEmpty() && onExit.isEmpty() && respawnPoint == null;
     }
 
 
