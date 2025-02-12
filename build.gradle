@@ -17,6 +17,7 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+    maven { url 'https://jitpack.io' }
 
     flatDir {
         dir "libs"
@@ -32,6 +33,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "dev.doublekekse.area_lib:area_lib:0.1.0"
+    modCompileOnly "com.github.FiguraMC:Figura:1.21-SNAPSHOT"
 }
 
 processResources {

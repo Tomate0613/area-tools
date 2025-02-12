@@ -12,6 +12,7 @@
   ],
   "client": [
     "ChatScreenMixin",
+    "LocalPlayerMixin",
     "MultiPlayerGameModeMixin"
   ],
   "injectors": {
