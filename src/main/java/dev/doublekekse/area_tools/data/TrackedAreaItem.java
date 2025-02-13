@@ -24,12 +24,15 @@ public class TrackedAreaItem implements BVHItem {
     public @Nullable Vec3 respawnPoint;
     public float respawnYaw;
 
-
     public static TrackedAreaItem of(AreaSavedData savedData, CompoundTag tag) {
         var data = new TrackedAreaItem();
         data.load(savedData, tag);
 
         return data;
+    }
+
+    public void update(AreaSavedData savedData) {
+        area = savedData.get(areaId);
     }
 
     public CompoundTag save() {

@@ -17,6 +17,25 @@ public class TrackBVHTree {
 
     public TrackBVHTree(AreaSavedData savedData) {
         this.savedData = savedData;
+
+        savedData.addChangeListener((areaId, area) -> {
+            if (node == null) {
+                return;
+            }
+
+            var filtered = node.listAllAreas().stream().filter(trackedAreaItem -> savedData.has(trackedAreaItem.areaId)).toList();
+
+            if(filtered.isEmpty()) {
+                node = null;
+                return;
+            }
+
+            for (var trackedAreaItem : filtered) {
+                trackedAreaItem.update(savedData);
+            }
+
+            node = new BVHNode<>(filtered);
+        });
     }
 
     public void add(TrackedAreaItem trackedAreaItem) {
