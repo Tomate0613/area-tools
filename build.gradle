@@ -32,7 +32,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "dev.doublekekse.area_lib:area_lib:0.1.0"
+    modImplementation "com.github.Tomate0613:area-lib:main-SNAPSHOT"
     modCompileOnly "com.github.FiguraMC:Figura:1.21-SNAPSHOT"
 }
 
