@@ -6,7 +6,6 @@ import dev.doublekekse.area_tools.registry.AreaItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +16,6 @@ import java.util.List;
 public class AreaTools implements ModInitializer {
     @Override
     public void onInitialize() {
-        SharedConstants.IS_RUNNING_IN_IDE = true;
         AreaItems.register();
         AreaComponents.register();
 
