@@ -3,8 +3,8 @@
   "id": "area_tools",
   "version": "${version}",
   "name": "Area Tools",
-  "description": "",
-  "authors": [],
+  "description": "Various area-related map-making tools",
+  "authors": ["Tomate0613"],
   "contact": {},
   "license": "MIT",
   "icon": "assets/area_tools/icon.png",
@@ -23,6 +23,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
+    "area_lib": ">=0.1.0",
     "minecraft": "${minecraft_version}"
   }
 }
