@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.compat.FiguraCompat;
+import dev.doublekekse.area_tools.duck.LocalPlayerDuck;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalPlayer.class)
-public abstract class LocalPlayerMixin extends AbstractClientPlayer {
+public abstract class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlayerDuck {
     @Unique
     boolean wasInPanicArea = false;
     @Unique
@@ -42,10 +43,22 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
 
         if (inArea && !wasInPanicArea) {
             previousPanicValue = FiguraCompat.isPanic();
-            FiguraCompat.setPanic(false);
+            FiguraCompat.setPanic(true);
             wasInPanicArea = true;
         }
         if (!inArea && wasInPanicArea) {
+            FiguraCompat.setPanic(previousPanicValue);
+            wasInPanicArea = false;
+        }
+    }
+
+    @Override
+    public void area_tools$resetFiguraPanic() {
+        if (!FabricLoader.getInstance().isModLoaded("figura")) {
+            return;
+        }
+
+        if (wasInPanicArea) {
             FiguraCompat.setPanic(previousPanicValue);
             wasInPanicArea = false;
         }
