@@ -25,7 +25,7 @@ public class TrackBVHTree {
 
             var filtered = node.listAllAreas().stream().filter(trackedAreaItem -> savedData.has(trackedAreaItem.areaId)).toList();
 
-            if(filtered.isEmpty()) {
+            if (filtered.isEmpty()) {
                 node = null;
                 return;
             }
@@ -118,6 +118,10 @@ public class TrackBVHTree {
 
         for (var itemTag : listTag) {
             items.add(TrackedAreaItem.of(savedData, (CompoundTag) itemTag));
+        }
+
+        if (items.isEmpty()) {
+            return;
         }
 
         node = new BVHNode<>(items);
