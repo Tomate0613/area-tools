@@ -41,7 +41,7 @@ public class AreaTrackCommand {
 
                 var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
                 var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.getOrCreate(area.getKey());
+                var item = trackedAreas.getOrCreate(area.getId());
 
                 item.respawnPoint = position;
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
@@ -54,7 +54,7 @@ public class AreaTrackCommand {
 
                 var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
                 var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.getOrCreate(area.getKey());
+                var item = trackedAreas.getOrCreate(area.getId());
 
                 item.respawnPoint = position;
                 item.respawnYaw = yaw;
@@ -66,7 +66,7 @@ public class AreaTrackCommand {
 
                 var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
                 var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.get(area.getKey());
+                var item = trackedAreas.get(area.getId());
 
                 if(item.isEmpty()) {
                     ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
@@ -94,7 +94,7 @@ public class AreaTrackCommand {
             var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
             var trackedAreas = data.trackedAreas;
 
-            var trackItem = trackedAreas.getOrCreate(area.getKey());
+            var trackItem = trackedAreas.getOrCreate(area.getId());
 
             lookup.apply(trackItem).add(command);
             data.setDirty();
@@ -103,12 +103,12 @@ public class AreaTrackCommand {
 
             return 1;
         })))).then(literal("remove").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
-            var area = AreaArgument.getAreaId(ctx, "area");
+            var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
             var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
             var trackedAreas = data.trackedAreas;
 
-            var trackItem = trackedAreas.get(area);
+            var trackItem = trackedAreas.get(area.getId());
             if (trackItem.isEmpty()) {
                 ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;
@@ -125,12 +125,12 @@ public class AreaTrackCommand {
 
             return 1;
         })))).then(literal("list").then(argument("area", AreaArgument.area()).executes(ctx -> {
-            var area = AreaArgument.getAreaId(ctx, "area");
+            var area = AreaArgument.getArea(ctx, "area");
             var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
             var trackedAreas = data.trackedAreas;
 
 
-            var trackItem = trackedAreas.get(area);
+            var trackItem = trackedAreas.get(area.getId());
             if (trackItem.isEmpty()) {
                 ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;

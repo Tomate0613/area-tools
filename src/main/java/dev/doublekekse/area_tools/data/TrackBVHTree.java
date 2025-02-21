@@ -18,7 +18,7 @@ public class TrackBVHTree {
     public TrackBVHTree(AreaSavedData savedData) {
         this.savedData = savedData;
 
-        savedData.addChangeListener((areaId, area) -> {
+        savedData.addChangeListener((area) -> {
             if (node == null) {
                 return;
             }
