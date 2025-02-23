@@ -23,7 +23,7 @@ public class TrackBVHTree {
                 return;
             }
 
-            var filtered = node.listAllAreas().stream().filter(trackedAreaItem -> savedData.has(trackedAreaItem.areaId)).toList();
+            var filtered = node.listAllAreas().stream().filter(trackedAreaItem -> savedData.has(trackedAreaItem.area.getId())).toList();
 
             if (filtered.isEmpty()) {
                 node = null;
@@ -56,7 +56,7 @@ public class TrackBVHTree {
     }
 
     public Optional<TrackedAreaItem> get(ResourceLocation areaId) {
-        return listAllItems().stream().filter((trackItem) -> trackItem.areaId.equals(areaId)).findAny();
+        return listAllItems().stream().filter((trackItem) -> trackItem.area.getId().equals(areaId)).findAny();
     }
 
     public TrackedAreaItem getOrCreate(ResourceLocation areaId) {
@@ -67,7 +67,6 @@ public class TrackBVHTree {
         }
 
         var item = new TrackedAreaItem();
-        item.areaId = areaId;
         item.area = savedData.get(areaId);
 
         add(item);

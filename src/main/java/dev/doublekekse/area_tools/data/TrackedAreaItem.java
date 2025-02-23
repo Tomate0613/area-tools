@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class TrackedAreaItem implements BVHItem {
-    public ResourceLocation areaId;
     public Area area;
 
     public List<String> onEnter = new ArrayList<>();
@@ -32,13 +31,13 @@ public class TrackedAreaItem implements BVHItem {
     }
 
     public void update(AreaSavedData savedData) {
-        area = savedData.get(areaId);
+        area = savedData.get(area.getId());
     }
 
     public CompoundTag save() {
         var tag = new CompoundTag();
 
-        tag.putString("areaId", areaId.toString());
+        tag.putString("areaId", area.getId().toString());
         tag.put("onEnter", toTag(onEnter));
         tag.put("onExit", toTag(onExit));
 
@@ -53,7 +52,7 @@ public class TrackedAreaItem implements BVHItem {
     public void load(AreaSavedData savedData, CompoundTag tag) {
         onEnter = toStringList(tag.getList("onEnter", Tag.TAG_STRING));
         onExit = toStringList(tag.getList("onExit", Tag.TAG_STRING));
-        areaId = ResourceLocation.parse(tag.getString("areaId"));
+        var areaId = ResourceLocation.parse(tag.getString("areaId"));
         area = savedData.get(areaId);
 
         if (tag.contains("respawnPoint")) {
@@ -104,7 +103,6 @@ public class TrackedAreaItem implements BVHItem {
     @Override
     public String toString() {
         return "TrackItem{" +
-            "areaId=" + areaId +
             ", area=" + area +
             ", onEnter=" + onEnter +
             ", onExit=" + onExit +
