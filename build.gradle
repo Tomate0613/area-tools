@@ -45,7 +45,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     //modImplementation "com.github.Tomate0613:area-lib:main-SNAPSHOT"
-    modImplementation "maven.modrinth:area_lib:0.2.1"
+    modImplementation "maven.modrinth:area_lib:0.2.2"
     //modCompileOnly "com.github.FiguraMC:Figura:1.21-SNAPSHOT"
     modCompileOnly "maven.modrinth:figura:0.1.5+1.21.1"
 }
