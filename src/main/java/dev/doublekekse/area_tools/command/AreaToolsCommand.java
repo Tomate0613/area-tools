@@ -86,7 +86,7 @@ public class AreaToolsCommand {
             var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
             if (component == null) {
-                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.list.not_tracked"));
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.no_events"));
                 return 0;
             }
 
@@ -104,14 +104,14 @@ public class AreaToolsCommand {
 
 
             if (component == null) {
-                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.list.not_tracked"));
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.no_events"));
                 return 0;
             }
 
             var commands = lookup.apply(component);
 
             for (var command : commands) {
-                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/%s on_enter remove %s %s", AREA_NAME, area.getId(), command))).withColor(ChatFormatting.AQUA);
+                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/%s %s remove %s %s", AREA_NAME, trackEvent, area.getId(), command))).withColor(ChatFormatting.AQUA);
                 ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_tools.track_event.list.remove").withStyle(style)), false);
             }
 

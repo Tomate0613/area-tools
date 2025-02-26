@@ -11,11 +11,12 @@
   "commands.area_tools.area_tools.spawnpoint.clear": "Cleared area spawnpoint",
 
   "commands.area_tools.area_tools.on_enter.add": "Added %s to on_enter",
-  "commands.area_tools.area_tools.on_enter.remove": "Removed %s to on_enter",
+  "commands.area_tools.area_tools.on_enter.remove": "Removed %s from on_enter",
 
   "commands.area_tools.area_tools.on_exit.add": "Added %s to on_exit",
   "commands.area_tools.area_tools.on_exit.remove": "Removed %s from on_exit",
 
-  "commands.area_tools.area_tools.track_event.list.not_tracked": "Not tracked",
+  "commands.area_tools.area_tools.track_event.no_events": "No events",
+
   "commands.area_tools.area_tools.track_event.list.remove": "[remove]"
 }
