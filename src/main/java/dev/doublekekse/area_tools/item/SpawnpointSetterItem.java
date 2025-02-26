@@ -6,6 +6,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import org.jetbrains.annotations.NotNull;
 
 public class SpawnpointSetterItem extends Item {
     public SpawnpointSetterItem(Properties properties) {
@@ -18,7 +19,7 @@ public class SpawnpointSetterItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext useOnContext) {
+    public @NotNull InteractionResult useOn(UseOnContext useOnContext) {
         var level = useOnContext.getLevel();
 
         if (level.isClientSide) {
@@ -26,7 +27,7 @@ public class SpawnpointSetterItem extends Item {
             var data = AreaClientData.getClientLevelData();
             var spawnpointPos = position.above();
 
-            var area = data.find(level, position.getCenter());
+            var area = data.findAllAreasContaining(level, position.getCenter());
             if (area != null) {
                 var areaId = area.getId().toString();
                 AreaToolsClient.openChatScreen(String.format("/area_track spawnpoint %s %s %s %s", areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());

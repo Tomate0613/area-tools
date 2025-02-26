@@ -5,8 +5,9 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import dev.doublekekse.area_lib.command.argument.AreaArgument;
-import dev.doublekekse.area_tools.data.AreaToolsSavedData;
-import dev.doublekekse.area_tools.data.TrackedAreaItem;
+import dev.doublekekse.area_tools.component.area.EventsComponent;
+import dev.doublekekse.area_tools.component.area.RespawnPointComponent;
+import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
@@ -28,120 +29,87 @@ public class AreaTrackCommand {
         trackEvent("on_exit", base, (track) -> track.onExit);
 
         dispatcher.register(
-            base.then(literal("list").executes(ctx -> {
-                var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-
-                for (var item : data.trackedAreas.listAllItems()) {
-                    ctx.getSource().sendSuccess(() -> Component.literal(String.valueOf(item)), false);
-                }
-                return 1;
-            })).then(literal("spawnpoint").then(argument("area", AreaArgument.area()).then(argument("position", Vec3Argument.vec3()).executes(ctx -> {
+            base.then(literal("spawnpoint").then(argument("area", AreaArgument.area()).then(argument("position", Vec3Argument.vec3()).executes(ctx -> {
+                var server = ctx.getSource().getServer();
                 var area = AreaArgument.getArea(ctx, "area");
                 var position = Vec3Argument.getVec3(ctx, "position");
 
-                var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-                var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.getOrCreate(area.getId());
+                area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, 0));
 
-                item.respawnPoint = position;
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
 
                 return 1;
             }).then(argument("yaw", FloatArgumentType.floatArg()).executes(ctx -> {
+                var server = ctx.getSource().getServer();
                 var area = AreaArgument.getArea(ctx, "area");
                 var position = Vec3Argument.getVec3(ctx, "position");
                 var yaw = FloatArgumentType.getFloat(ctx, "yaw");
 
-                var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-                var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.getOrCreate(area.getId());
+                area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, yaw));
 
-                item.respawnPoint = position;
-                item.respawnYaw = yaw;
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
 
                 return 1;
             }))).then(literal("clear").executes(ctx -> {
+                var server = ctx.getSource().getServer();
                 var area = AreaArgument.getArea(ctx, "area");
 
-                var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-                var trackedAreas = data.trackedAreas;
-                var item = trackedAreas.get(area.getId());
+                area.remove(server, AreaComponents.RESPAWN_POINT_COMPONENT);
 
-                if(item.isEmpty()) {
-                    ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
-                    return 0;
-                }
-
-                item.get().respawnPoint = null;
                 ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint.clear"), false);
-
-                if (item.get().isEmpty()) {
-                    trackedAreas.remove(item.get());
-                }
-
-                data.setDirty();
 
                 return 1;
             }))))
         );
     }
 
-    static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<TrackedAreaItem, List<String>> lookup) {
+    static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<EventsComponent, List<String>> lookup) {
         base.then(literal(trackEvent).then(literal("add").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
+            var server = ctx.getSource().getServer();
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
-            var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-            var trackedAreas = data.trackedAreas;
+            var component = area.getOrDefault(AreaComponents.EVENTS_COMPONENT, new EventsComponent());
 
-            var trackItem = trackedAreas.getOrCreate(area.getId());
-
-            lookup.apply(trackItem).add(command);
-            data.setDirty();
+            lookup.apply(component).add(command);
+            area.put(server, AreaComponents.EVENTS_COMPONENT, component);
 
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".add", command), false);
 
             return 1;
         })))).then(literal("remove").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
+            var server = ctx.getSource().getServer();
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
-            var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-            var trackedAreas = data.trackedAreas;
 
-            var trackItem = trackedAreas.get(area.getId());
-            if (trackItem.isEmpty()) {
+            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+
+            if (component == null) {
                 ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;
             }
 
-            lookup.apply(trackItem.get()).remove(command);
+            lookup.apply(component).remove(command);
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".remove", command), false);
 
-            if (trackItem.get().isEmpty()) {
-                trackedAreas.remove(trackItem.get());
+            if (component.isEmpty()) {
+                area.remove(server, AreaComponents.EVENTS_COMPONENT);
             }
-
-            data.setDirty();
 
             return 1;
         })))).then(literal("list").then(argument("area", AreaArgument.area()).executes(ctx -> {
             var area = AreaArgument.getArea(ctx, "area");
-            var data = AreaToolsSavedData.getServerData(ctx.getSource().getServer());
-            var trackedAreas = data.trackedAreas;
+            var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
 
-            var trackItem = trackedAreas.get(area.getId());
-            if (trackItem.isEmpty()) {
+            if (component == null) {
                 ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
                 return 0;
             }
 
-            var item = trackItem.get();
-            var commands = lookup.apply(item);
-            System.out.println(commands);
+            var commands = lookup.apply(component);
 
             for (var command : commands) {
-                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/area_track on_enter remove %s %s", area.toString(), command))).withColor(ChatFormatting.AQUA);
+                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/area_track on_enter remove %s %s", area.getId(), command))).withColor(ChatFormatting.AQUA);
                 ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_track.track_event.list.remove").withStyle(style)), false);
             }
 

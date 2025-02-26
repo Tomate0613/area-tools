@@ -1,11 +1,10 @@
 package dev.doublekekse.area_tools.mixin;
 
-import dev.doublekekse.area_tools.registry.AreaComponents;
+import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,11 +26,11 @@ public class ServerPlayerGameModeMixin {
         var itemStack = player.getMainHandItem();
         var components = itemStack.getComponents();
 
-        if (!components.has(AreaComponents.CAN_USE_IN_AREA)) {
+        if (!components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
             return;
         }
 
-        var component = components.get(AreaComponents.CAN_USE_IN_AREA);
+        var component = components.get(AreaItemComponents.CAN_USE_IN_AREA);
         assert component != null;
 
         if (!component.isInArea(level, blockPos.getCenter())) {

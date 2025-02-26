@@ -2,7 +2,7 @@ package dev.doublekekse.area_tools.mixin;
 
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.AreaTools;
-import dev.doublekekse.area_tools.registry.AreaComponents;
+import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,11 +24,11 @@ public abstract class PlayerMixin {
         var itemStack = getWeaponItem();
         var components = itemStack.getComponents();
 
-        if (!components.has(AreaComponents.CAN_USE_IN_AREA)) {
+        if (!components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
             return;
         }
 
-        var component = components.get(AreaComponents.CAN_USE_IN_AREA);
+        var component = components.get(AreaItemComponents.CAN_USE_IN_AREA);
         assert component != null;
 
         if (!component.isInArea(entity)) {

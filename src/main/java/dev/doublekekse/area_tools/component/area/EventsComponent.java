@@ -11,22 +11,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class AreaEventsComponent implements AreaDataComponent {
+public class EventsComponent implements AreaDataComponent {
     public List<String> onEnter = new ArrayList<>();
     public List<String> onExit = new ArrayList<>();
 
     @Override
     public void load(AreaSavedData areaSavedData, CompoundTag tag) {
-        onEnter = toStringList(tag.getList("onEnter", Tag.TAG_STRING));
-        onExit = toStringList(tag.getList("onExit", Tag.TAG_STRING));
+        onEnter = toStringList(tag.getList("on_enter", Tag.TAG_STRING));
+        onExit = toStringList(tag.getList("on_exit", Tag.TAG_STRING));
     }
 
     @Override
     public CompoundTag save() {
         var tag = new CompoundTag();
 
-        tag.put("onEnter", toTag(onEnter));
-        tag.put("onExit", toTag(onExit));
+        tag.put("on_enter", toTag(onEnter));
+        tag.put("on_exit", toTag(onExit));
 
         return tag;
     }

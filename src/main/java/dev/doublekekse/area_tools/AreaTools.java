@@ -2,6 +2,7 @@ package dev.doublekekse.area_tools;
 
 import dev.doublekekse.area_tools.command.AreaTrackCommand;
 import dev.doublekekse.area_tools.registry.AreaComponents;
+import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -17,6 +18,7 @@ public class AreaTools implements ModInitializer {
     @Override
     public void onInitialize() {
         AreaItems.register();
+        AreaItemComponents.register();
         AreaComponents.register();
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {

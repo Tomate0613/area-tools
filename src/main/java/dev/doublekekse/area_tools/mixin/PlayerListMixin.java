@@ -3,6 +3,7 @@ package dev.doublekekse.area_tools.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
+import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -18,12 +19,13 @@ public class PlayerListMixin {
     @WrapOperation(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;findRespawnPositionAndUseSpawnBlock(ZLnet/minecraft/world/level/portal/DimensionTransition$PostDimensionTransition;)Lnet/minecraft/world/level/portal/DimensionTransition;"))
     DimensionTransition respawn(ServerPlayer instance, boolean bl, DimensionTransition.PostDimensionTransition postDimensionTransition, Operation<DimensionTransition> original) {
         var areas = ((ServerPlayerDuck) instance).area_tools$getAreas();
-        var item = areas.stream().min(Comparator.comparingDouble(area -> area.getBoundingBox().getSize()));
+        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(Comparator.comparingDouble(a -> a.getBoundingBox().getSize()));
 
-        if (item.isEmpty() || item.get().respawnPoint == null) {
+        if (area.isEmpty()) {
             return original.call(instance, bl, postDimensionTransition);
         }
 
-        return new DimensionTransition((ServerLevel) instance.level(), item.get().respawnPoint, Vec3.ZERO, item.get().respawnYaw, 0.0f, postDimensionTransition);
+        var component = area.get().get(AreaComponents.RESPAWN_POINT_COMPONENT);
+        return new DimensionTransition((ServerLevel) instance.level(), component.respawnPoint, Vec3.ZERO, component.respawnYaw, 0.0f, postDimensionTransition);
     }
 }

@@ -1,10 +1,11 @@
 package dev.doublekekse.area_tools.mixin;
 
 import com.mojang.authlib.GameProfile;
+import dev.doublekekse.area_lib.Area;
+import dev.doublekekse.area_lib.data.AreaSavedData;
 import dev.doublekekse.area_tools.AreaTools;
-import dev.doublekekse.area_tools.data.AreaToolsSavedData;
-import dev.doublekekse.area_tools.data.TrackedAreaItem;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
+import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
@@ -28,9 +29,9 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Final
     public MinecraftServer server;
     @Unique
-    List<TrackedAreaItem> oldTrackedAreaItems;
+    List<Area> oldTrackedAreas;
     @Unique
-    AreaToolsSavedData data;
+    AreaSavedData data;
 
     public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(level, blockPos, f, gameProfile);
@@ -38,30 +39,40 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
 
     @Inject(method = "<init>", at = @At("RETURN"))
     void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
-        data = AreaToolsSavedData.getServerData(minecraftServer);
-        oldTrackedAreaItems = data.trackedAreas.findAreasContaining(level(), position());
+        data = AreaSavedData.getServerData(minecraftServer);
+        oldTrackedAreas = data.findTrackedAreasContaining(this);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
-        var trackItems = data.trackedAreas.findAreasContaining(level(), position());
+        var trackItems = data.findTrackedAreasContaining(this);
 
-        var newItems = trackItems.stream().filter(a -> !oldTrackedAreaItems.contains(a));
-        var oldItems = oldTrackedAreaItems.stream().filter(a -> !trackItems.contains(a));
+        var newItems = trackItems.stream().filter(a -> !oldTrackedAreas.contains(a));
+        var oldItems = oldTrackedAreas.stream().filter(a -> !trackItems.contains(a));
 
         newItems.forEach(area -> {
-            AreaTools.runCommands(server, this, area.onEnter);
+            System.out.println("new,"+area);
+            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+
+            if(component != null) {
+                AreaTools.runCommands(server, this, component.onEnter);
+            }
         });
 
         oldItems.forEach(area -> {
-            AreaTools.runCommands(server, this, area.onExit);
+            System.out.println("old,"+area);
+            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+
+            if(component != null) {
+                AreaTools.runCommands(server, this, component.onExit);
+            }
         });
 
-        oldTrackedAreaItems = trackItems;
+        oldTrackedAreas = trackItems;
     }
 
     @Override
-    public List<TrackedAreaItem> area_tools$getAreas() {
-        return oldTrackedAreaItems;
+    public List<Area> area_tools$getAreas() {
+        return oldTrackedAreas;
     }
 }

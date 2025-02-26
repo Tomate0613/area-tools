@@ -26,8 +26,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static dev.doublekekse.area_tools.registry.AreaComponents.CAN_USE_IN_AREA;
-import static dev.doublekekse.area_tools.registry.AreaComponents.DISSOLVE;
+import static dev.doublekekse.area_tools.registry.AreaItemComponents.CAN_USE_IN_AREA;
+import static dev.doublekekse.area_tools.registry.AreaItemComponents.DISSOLVE;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements DataComponentHolder {

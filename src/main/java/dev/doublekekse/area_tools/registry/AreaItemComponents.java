@@ -6,7 +6,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 
-public class AreaItemComponents {
+public final class AreaItemComponents {
     public static final DataComponentType<AreaComponent> CAN_USE_IN_AREA = register(
         DataComponentType.<AreaComponent>builder().persistent(AreaComponent.CODEC).networkSynchronized(AreaComponent.STREAM_CODEC).cacheEncoding().build(),
         "can_use_in_area"
