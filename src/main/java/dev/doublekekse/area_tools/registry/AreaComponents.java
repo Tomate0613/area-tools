@@ -1,7 +1,7 @@
 package dev.doublekekse.area_tools.registry;
 
 import dev.doublekekse.area_tools.AreaTools;
-import dev.doublekekse.area_tools.component.AreaComponent;
+import dev.doublekekse.area_tools.component.item.AreaComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;

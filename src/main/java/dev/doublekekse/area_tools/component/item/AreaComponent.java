@@ -1,4 +1,4 @@
-package dev.doublekekse.area_tools.component;
+package dev.doublekekse.area_tools.component.item;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
