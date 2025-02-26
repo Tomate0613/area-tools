@@ -1,6 +1,6 @@
 package dev.doublekekse.area_tools;
 
-import dev.doublekekse.area_tools.command.AreaTrackCommand;
+import dev.doublekekse.area_tools.command.AreaToolsCommand;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
@@ -28,7 +28,7 @@ public class AreaTools implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(
             (dispatcher, registryAccess, environment) -> {
-                AreaTrackCommand.register(dispatcher);
+                AreaToolsCommand.register(dispatcher);
             }
         );
     }

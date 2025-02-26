@@ -2,6 +2,7 @@ package dev.doublekekse.area_tools.item;
 
 import dev.doublekekse.area_lib.data.AreaClientData;
 import dev.doublekekse.area_tools.client.AreaToolsClient;
+import dev.doublekekse.area_tools.command.AreaToolsCommand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class SpawnpointSetterItem extends Item {
             var area = data.findAllAreasContaining(level, position.getCenter());
             if (area != null) {
                 var areaId = area.getId().toString();
-                AreaToolsClient.openChatScreen(String.format("/area_track spawnpoint %s %s %s %s", areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());
+                AreaToolsClient.openChatScreen(String.format("/%s spawnpoint %s %s %s %s", AreaToolsCommand.AREA_NAME, areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());
             }
         }
 

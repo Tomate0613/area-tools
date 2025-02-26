@@ -21,9 +21,11 @@ import java.util.function.Function;
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
-public class AreaTrackCommand {
+public class AreaToolsCommand {
+    public static final String AREA_NAME = "area_tools";
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var base = literal("area_track");
+        var base = literal(AREA_NAME);
 
         trackEvent("on_enter", base, (track) -> track.onEnter);
         trackEvent("on_exit", base, (track) -> track.onExit);
@@ -36,7 +38,7 @@ public class AreaTrackCommand {
 
                 area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, 0));
 
-                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
 
                 return 1;
             }).then(argument("yaw", FloatArgumentType.floatArg()).executes(ctx -> {
@@ -47,7 +49,7 @@ public class AreaTrackCommand {
 
                 area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, yaw));
 
-                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint"), false);
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
 
                 return 1;
             }))).then(literal("clear").executes(ctx -> {
@@ -56,7 +58,7 @@ public class AreaTrackCommand {
 
                 area.remove(server, AreaComponents.RESPAWN_POINT_COMPONENT);
 
-                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track.spawnpoint.clear"), false);
+                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint.clear"), false);
 
                 return 1;
             }))))
@@ -73,7 +75,7 @@ public class AreaTrackCommand {
             lookup.apply(component).add(command);
             area.put(server, AreaComponents.EVENTS_COMPONENT, component);
 
-            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".add", command), false);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools." + trackEvent + ".add", command), false);
 
             return 1;
         })))).then(literal("remove").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
@@ -84,12 +86,12 @@ public class AreaTrackCommand {
             var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
             if (component == null) {
-                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.list.not_tracked"));
                 return 0;
             }
 
             lookup.apply(component).remove(command);
-            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_track." + trackEvent + ".remove", command), false);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools." + trackEvent + ".remove", command), false);
 
             if (component.isEmpty()) {
                 area.remove(server, AreaComponents.EVENTS_COMPONENT);
@@ -102,15 +104,15 @@ public class AreaTrackCommand {
 
 
             if (component == null) {
-                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_track.track_event.list.not_tracked"));
+                ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.list.not_tracked"));
                 return 0;
             }
 
             var commands = lookup.apply(component);
 
             for (var command : commands) {
-                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/area_track on_enter remove %s %s", area.getId(), command))).withColor(ChatFormatting.AQUA);
-                ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_track.track_event.list.remove").withStyle(style)), false);
+                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/%s on_enter remove %s %s", AREA_NAME, area.getId(), command))).withColor(ChatFormatting.AQUA);
+                ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_tools.track_event.list.remove").withStyle(style)), false);
             }
 
             return 1;
