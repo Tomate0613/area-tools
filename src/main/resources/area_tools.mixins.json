@@ -4,6 +4,9 @@
   "package": "dev.doublekekse.area_tools.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "EntitySelectorMixin",
+    "EntitySelectorOptionsMixin",
+    "EntitySelectorParserMixin",
     "ItemStackMixin",
     "PlayerListMixin",
     "PlayerMixin",
@@ -13,8 +16,8 @@
   "client": [
     "ChatScreenMixin",
     "LocalPlayerMixin",
-    "MultiPlayerGameModeMixin",
-    "MinecraftMixin"
+    "MinecraftMixin",
+    "MultiPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1
