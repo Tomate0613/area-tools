@@ -2,6 +2,7 @@ package dev.doublekekse.area_tools.mixin;
 
 import com.mojang.authlib.GameProfile;
 import dev.doublekekse.area_lib.Area;
+import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_lib.data.AreaSavedData;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -28,6 +30,10 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Shadow
     @Final
     public MinecraftServer server;
+
+    @Shadow
+    protected abstract boolean isPvpAllowed();
+
     @Unique
     List<Area> oldTrackedAreas;
     @Unique
@@ -53,7 +59,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
         newItems.forEach(area -> {
             var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
-            if(component != null) {
+            if (component != null) {
                 AreaTools.runCommands(server, this, component.onEnter);
             }
         });
@@ -61,7 +67,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
         oldItems.forEach(area -> {
             var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
-            if(component != null) {
+            if (component != null) {
                 AreaTools.runCommands(server, this, component.onExit);
             }
         });
@@ -72,5 +78,16 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Override
     public List<Area> area_tools$getAreas() {
         return oldTrackedAreas;
+    }
+
+    @Inject(method = "canHarmPlayer", at = @At("HEAD"), cancellable = true)
+    void canHarmPlayer(Player player, CallbackInfoReturnable<Boolean> cir) {
+        var savedData = AreaLib.getSavedData(player.level());
+        var pvpAllowed = isPvpAllowed();
+        var area = savedData.get(AreaTools.id(pvpAllowed ? "pvp_disabled" : "pvp_enabled"));
+
+        if (area != null && area.contains(player)) {
+            cir.setReturnValue(!pvpAllowed);
+        }
     }
 }
