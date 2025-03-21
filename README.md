@@ -8,13 +8,14 @@ Areas are managed using [Area Lib](https://modrinth.com/mod/area_lib)
 
 - Item area restriction using item components
 - Area Respawn Points – Players who die inside an area with a respawn point will respawn there
-- Disable pvp within `area_tools:pvp_disabled`
+- Control pvp usage with `area_tools:pvp_disabled` and `area_tools:pvp_enabled`
 - Automatically enable figura panic mode for players inside `area_tools:figura_panic`, restoring their
   previous state upon exit
+- `area_tools:area_check` loot condition
 - Run commands when entering or exiting an area
 
 ### Commands
-`/area_track` is used to set spawnpoint and enter/exit events for areas
+`/area_tools` is used to set spawnpoint and enter/exit events for areas
 
 ### Items
 These are just shortcuts for commands
