@@ -1,6 +1,7 @@
 package dev.doublekekse.area_tools;
 
 import dev.doublekekse.area_tools.command.AreaToolsCommand;
+import dev.doublekekse.area_tools.loot.condition.LootItemEntityAreaCondition;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
@@ -31,6 +32,8 @@ public class AreaTools implements ModInitializer {
                 AreaToolsCommand.register(dispatcher);
             }
         );
+
+        LootItemEntityAreaCondition.register();
     }
 
     public static void runCommands(MinecraftServer server, Player player, List<String> commands) {
