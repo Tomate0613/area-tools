@@ -1,7 +1,7 @@
 package dev.doublekekse.area_tools.mixin;
 
 import com.mojang.authlib.GameProfile;
-import dev.doublekekse.area_lib.AreaLib;
+import dev.doublekekse.area_lib.data.AreaClientData;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.compat.FiguraCompat;
 import dev.doublekekse.area_tools.duck.LocalPlayerDuck;
@@ -32,7 +32,12 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements L
             return;
         }
 
-        var savedData = AreaLib.getSavedData(level());
+        var savedData = AreaClientData.getClientLevelData();
+
+        if (savedData == null) {
+            return;
+        }
+
         var area = savedData.get(AreaTools.id("figura_panic"));
 
         if (area == null) {
