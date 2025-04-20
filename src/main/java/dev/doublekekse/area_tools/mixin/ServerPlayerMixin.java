@@ -90,4 +90,9 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
             cir.setReturnValue(!pvpAllowed);
         }
     }
+
+    @Inject(method = "restoreFrom", at = @At("HEAD"))
+    void restoreFrom(ServerPlayer serverPlayer, boolean bl, CallbackInfo ci) {
+        oldTrackedAreas = ((ServerPlayerDuck) serverPlayer).area_tools$getAreas();
+    }
 }
