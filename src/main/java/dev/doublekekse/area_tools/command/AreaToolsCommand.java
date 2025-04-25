@@ -25,7 +25,7 @@ public class AreaToolsCommand {
     public static final String AREA_NAME = "area_tools";
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        var base = literal(AREA_NAME);
+        var base = literal(AREA_NAME).requires(stack -> stack.hasPermission(2));
 
         trackEvent("on_enter", base, (track) -> track.onEnter);
         trackEvent("on_exit", base, (track) -> track.onExit);
