@@ -59,4 +59,21 @@ public final class AreaComponent {
             consumer.accept(Component.translatable("item.area_tools.area_component." + type).withStyle(ChatFormatting.GRAY));
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof AreaComponent otherComponent)) {
+            return false;
+        }
+
+        return areaId.equals(otherComponent.areaId);
+    }
+
+    @Override
+    public int hashCode() {
+        return areaId.hashCode();
+    }
 }
