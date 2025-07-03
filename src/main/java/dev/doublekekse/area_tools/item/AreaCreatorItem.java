@@ -3,7 +3,7 @@ package dev.doublekekse.area_tools.item;
 import dev.doublekekse.area_tools.client.AreaToolsClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,10 +47,9 @@ public class AreaCreatorItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResult use(Level level, Player player, InteractionHand interactionHand) {
         if (!level.isClientSide) {
-            var itemStack = player.getItemInHand(interactionHand);
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResult.CONSUME;
         }
 
         if (from == null) {
@@ -64,8 +63,7 @@ public class AreaCreatorItem extends Item {
             to = null;
         }
 
-        var itemStack = player.getItemInHand(interactionHand);
-        return InteractionResultHolder.consume(itemStack);
+        return InteractionResult.SUCCESS;
     }
 
     private String toCommandString(AABB aabb) {

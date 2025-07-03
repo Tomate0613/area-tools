@@ -111,7 +111,7 @@ public class AreaToolsCommand {
             var commands = lookup.apply(component);
 
             for (var command : commands) {
-                var style = Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("/%s %s remove %s %s", AREA_NAME, trackEvent, area.getId(), command))).withColor(ChatFormatting.AQUA);
+                var style = Style.EMPTY.withClickEvent(new ClickEvent.SuggestCommand(String.format("/%s %s remove %s %s", AREA_NAME, trackEvent, area.getId(), command))).withColor(ChatFormatting.AQUA);
                 ctx.getSource().sendSuccess(() -> Component.literal(command).append(" ").append(Component.translatable("commands.area_tools.area_tools.track_event.list.remove").withStyle(style)), false);
             }
 

@@ -3,7 +3,8 @@ package dev.doublekekse.area_tools.registry;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.item.AreaCreatorItem;
 import dev.doublekekse.area_tools.item.SpawnpointSetterItem;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
@@ -15,10 +16,10 @@ public class AreaItems {
     public static final Item SPAWNPOINT_SETTER = register(SpawnpointSetterItem::new, new Item.Properties().stacksTo(1).rarity(Rarity.EPIC), "spawnpoint_setter");
 
     private static Item register(Function<Item.Properties, Item> factory, Item.Properties properties, String path) {
-        ResourceLocation itemLocation = AreaTools.id(path);
-        final var item = factory.apply(properties);
+        var location = AreaTools.id(path);
+        var key = ResourceKey.create(Registries.ITEM, location);
 
-        return Items.registerItem(itemLocation, item);
+        return Items.registerItem(key, factory, properties);
     }
 
     public static void register() {

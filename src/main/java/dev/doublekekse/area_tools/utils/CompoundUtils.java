@@ -11,8 +11,8 @@ public class CompoundUtils {
     public static <Key, Value> HashMap<Key, Value> toMap(CompoundTag tag, Function<String, Key> toKey, Function<Tag, Value> toValue) {
         var map = new HashMap<Key, Value>();
 
-        for (var key : tag.getAllKeys()) {
-            map.put(toKey.apply(key), toValue.apply(tag.get(key)));
+        for (var entry : tag.entrySet()) {
+            map.put(toKey.apply(entry.getKey()), toValue.apply(entry.getValue()));
         }
 
         return map;

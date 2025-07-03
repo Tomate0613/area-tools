@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
 
@@ -36,7 +37,7 @@ public class AreaTools implements ModInitializer {
     }
 
     public static void runCommands(MinecraftServer server, Player player, List<String> commands) {
-        var stack = player.createCommandSourceStack().withSuppressedOutput().withMaximumPermission(2);
+        var stack = player.createCommandSourceStackForNameResolution((ServerLevel) player.level()).withSuppressedOutput().withMaximumPermission(2);
 
         for (var command : commands) {
             server.getCommands().performPrefixedCommand(stack, command);

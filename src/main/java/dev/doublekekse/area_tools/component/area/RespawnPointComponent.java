@@ -20,8 +20,8 @@ public class RespawnPointComponent implements AreaDataComponent {
 
     @Override
     public void load(AreaSavedData areaSavedData, CompoundTag tag) {
-        respawnPoint = toVec3(tag.getCompound("respawn_point"));
-        respawnYaw = tag.getFloat("respawn_yaw");
+        respawnPoint = toVec3(tag.getCompound("respawn_point").get());
+        respawnYaw = tag.getFloat("respawn_yaw").orElse(0f);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class RespawnPointComponent implements AreaDataComponent {
     }
 
     private Vec3 toVec3(CompoundTag tag) {
-        return new Vec3(tag.getDouble("x"), tag.getDouble("y"), tag.getDouble("z"));
+        return new Vec3(tag.getDouble("x").orElse(0.0), tag.getDouble("y").orElse(0.0), tag.getDouble("z").orElse(0.0));
     }
 }

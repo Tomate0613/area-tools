@@ -5,7 +5,6 @@ import dev.doublekekse.area_lib.data.AreaSavedData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,8 +16,8 @@ public class EventsComponent implements AreaDataComponent {
 
     @Override
     public void load(AreaSavedData areaSavedData, CompoundTag tag) {
-        onEnter = toStringList(tag.getList("on_enter", Tag.TAG_STRING));
-        onExit = toStringList(tag.getList("on_exit", Tag.TAG_STRING));
+        onEnter = toStringList(tag.getList("on_enter").get());
+        onExit = toStringList(tag.getList("on_exit").get());
     }
 
     @Override
@@ -45,7 +44,7 @@ public class EventsComponent implements AreaDataComponent {
         var list = new ArrayList<String>();
 
         for (var value : listTag) {
-            list.add(value.getAsString());
+            list.add(value.asString().get());
         }
 
         return list;
