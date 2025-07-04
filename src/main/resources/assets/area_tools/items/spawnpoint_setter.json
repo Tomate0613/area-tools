@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "area_tools:item/spawnpoint_setter"
+  }
+}
