@@ -29,10 +29,8 @@ public class SpawnpointSetterItem extends Item {
             var spawnpointPos = position.offset(useOnContext.getClickedFace().getUnitVec3i());
 
             var area = data.findAllAreasContaining(level, spawnpointPos.getCenter());
-            if (area != null) {
-                var areaId = area.getId().toString();
-                AreaToolsClient.openChatScreen(String.format("/%s spawnpoint %s %s %s %s", AreaToolsCommand.AREA_NAME, areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());
-            }
+            var areaId = area != null ? area.getId().toString() : "<area>";
+            AreaToolsClient.openChatScreen(String.format("/%s spawnpoint %s %s %s %s", AreaToolsCommand.AREA_NAME, areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());
         }
 
         return InteractionResult.CONSUME;
