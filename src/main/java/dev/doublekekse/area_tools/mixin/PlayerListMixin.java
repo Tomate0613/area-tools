@@ -2,6 +2,7 @@ package dev.doublekekse.area_tools.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,8 +12,6 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.Comparator;
-
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
     @WrapOperation(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;findRespawnPositionAndUseSpawnBlock(ZLnet/minecraft/world/level/portal/TeleportTransition$PostTeleportTransition;)Lnet/minecraft/world/level/portal/TeleportTransition;"))
@@ -20,7 +19,7 @@ public class PlayerListMixin {
         //DimensionTransition respawn(ServerPlayer instance, boolean bl, DimensionTransition.PostDimensionTransition postDimensionTransition, Operation<DimensionTransition> original) {
         //DimensionTransition respawn(ServerPlayer instance, boolean bl, DimensionTransition.PostDimensionTransition postDimensionTransition, Operation<DimensionTransition> original) {
         var areas = ((ServerPlayerDuck) instance).area_tools$getAreas();
-        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(Comparator.comparingDouble(a -> a.getBoundingBox().getSize()));
+        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(AreaTools.smallestArea());
 
         if (area.isEmpty()) {
             return original.call(instance, bl, postTeleportTransition);

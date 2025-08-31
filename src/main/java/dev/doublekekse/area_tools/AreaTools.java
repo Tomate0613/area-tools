@@ -1,5 +1,6 @@
 package dev.doublekekse.area_tools;
 
+import dev.doublekekse.area_lib.Area;
 import dev.doublekekse.area_tools.command.AreaToolsCommand;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItemComponents;
@@ -14,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTabs;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class AreaTools implements ModInitializer {
@@ -46,5 +48,17 @@ public class AreaTools implements ModInitializer {
 
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath("area_tools", path);
+    }
+
+    public static Comparator<Area> smallestArea() {
+        return Comparator.comparingDouble((area) -> {
+            var boundingBox = area.getBoundingBox();
+
+            if (boundingBox == null) {
+                return Double.MAX_VALUE;
+            }
+
+            return boundingBox.getSize();
+        });
     }
 }
