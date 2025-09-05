@@ -60,7 +60,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     void use(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!has(CAN_USE_IN_AREA)) {
+        if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
             return;
         }
 
@@ -78,6 +78,11 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             return;
         }
 
+        var player = useOnContext.getPlayer();
+        if (player == null || player.mayBuild()) {
+           return;
+        }
+
         var component = get(CAN_USE_IN_AREA);
         assert component != null;
 
@@ -88,7 +93,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
 
     @Inject(method = "mineBlock", at = @At("HEAD"), cancellable = true)
     void mineBlock(Level level, BlockState blockState, BlockPos blockPos, Player player, CallbackInfo ci) {
-        if (!has(CAN_USE_IN_AREA)) {
+        if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
             return;
         }
 

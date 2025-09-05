@@ -16,12 +16,15 @@ public abstract class PlayerMixin {
     @Shadow
     public abstract @NotNull ItemStack getWeaponItem();
 
-    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+	@Shadow
+	public abstract boolean mayBuild();
+
+	@Inject(method = "attack", at = @At("HEAD"), cancellable = true)
     void attack(Entity entity, CallbackInfo ci) {
         var itemStack = getWeaponItem();
         var components = itemStack.getComponents();
 
-        if (!components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
+        if (this.mayBuild() || !components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
             return;
         }
 

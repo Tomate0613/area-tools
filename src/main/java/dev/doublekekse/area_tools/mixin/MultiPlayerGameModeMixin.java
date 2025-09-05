@@ -25,7 +25,7 @@ public class MultiPlayerGameModeMixin {
         var itemStack = player.getMainHandItem();
         var components = itemStack.getComponents();
 
-        if (!components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
+        if (player.mayBuild() || !components.has(AreaItemComponents.CAN_USE_IN_AREA)) {
             return;
         }
 
