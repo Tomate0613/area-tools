@@ -59,8 +59,8 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     }
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-	void use(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-		if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
+    void use(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
+        if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
             return;
         }
 
