@@ -78,12 +78,12 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             return;
         }
 
-		Player player = useOnContext.getPlayer();
-		if (player == null || player.mayBuild()) {
-			return;
-		}
+        var player = useOnContext.getPlayer();
+        if (player == null || player.mayBuild()) {
+           return;
+        }
 
-		var component = get(CAN_USE_IN_AREA);
+        var component = get(CAN_USE_IN_AREA);
         assert component != null;
 
         if (!component.isInArea(useOnContext.getLevel(), useOnContext.getClickLocation())) {
