@@ -48,7 +48,7 @@ public class AreaCreatorItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand interactionHand) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             return InteractionResult.CONSUME;
         }
 

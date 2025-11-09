@@ -9,6 +9,7 @@ import dev.doublekekse.area_tools.registry.AreaLootConditions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -25,6 +26,8 @@ public class AreaTools implements ModInitializer {
         AreaItemComponents.register();
         AreaComponents.register();
         AreaLootConditions.register();
+
+        SharedConstants.IS_RUNNING_IN_IDE = true;
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {
             content.accept(AreaItems.AREA_CREATOR);

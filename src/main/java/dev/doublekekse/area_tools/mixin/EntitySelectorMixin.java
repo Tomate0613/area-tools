@@ -1,9 +1,7 @@
 package dev.doublekekse.area_tools.mixin;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.duck.EntitySelectorDuck;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -15,11 +13,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 @Mixin(EntitySelector.class)
@@ -35,33 +31,33 @@ public class EntitySelectorMixin implements EntitySelectorDuck {
         this.areaId = area;
     }
 
-    @WrapOperation(method = "getPredicate", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/critereon/MinMaxBounds$Doubles;isAny()Z"))
-    boolean isAny(MinMaxBounds.Doubles instance, Operation<Boolean> original) {
+    @ModifyVariable(method = "getPredicate", at = @At(value = "STORE"), ordinal = 2)
+    boolean enterIfBranch(boolean value) {
         if (areaId != null) {
-            return false;
+            return true;
         }
 
-        return original.call(instance);
+        return value;
     }
 
-    @Inject(method = "getPredicate", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
-    void getPredicate(CallbackInfoReturnable<Predicate<Entity>> cir, @Local(ordinal = 1) List<Predicate<Entity>> predicates) {
-        if (areaId == null) {
-            return;
+    //List<Predicate<Entity>>
+    @WrapOperation(method = "getPredicate", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
+    boolean getPredicate(List<Predicate<Entity>> predicates, Object o, Operation<Boolean> original) {
+        if (areaId != null) {
+            predicates.add((entity) -> {
+                var area = AreaLib.getSavedData(entity.level()).get(areaId);
+                if (area == null) {
+                    return false;
+                }
+
+                return area.contains(entity);
+            });
         }
 
-        predicates.add((entity) -> {
-            var area = AreaLib.getServerArea(Objects.requireNonNull(entity.getServer()), areaId);
-            if (area == null) {
-                return false;
-            }
+        if (range != null) {
+            return original.call(predicates, o);
+        }
 
-            return area.contains(entity);
-        });
-    }
-
-    @WrapWithCondition(method = "getPredicate", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1))
-    <E> boolean addAABBPredicate(List<E> instance, E e) {
-        return !range.isAny();
+        return true;
     }
 }

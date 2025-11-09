@@ -24,7 +24,7 @@ public class SpawnpointSetterItem extends Item {
     public @NotNull InteractionResult useOn(UseOnContext useOnContext) {
         var level = useOnContext.getLevel();
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             var position = useOnContext.getClickedPos();
             var data = AreaClientData.getClientLevelData();
             var spawnpointPos = position.offset(useOnContext.getClickedFace().getUnitVec3i());

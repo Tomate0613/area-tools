@@ -7,13 +7,14 @@ import dev.doublekekse.area_tools.item.AreaCreatorItem;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -33,7 +34,7 @@ public class AreaToolsClient implements ClientModInitializer {
                 return;
             }
 
-            var poseStack = context.matrixStack();
+            var poseStack = context.matrices();
 
             if (poseStack == null) {
                 return;
@@ -44,18 +45,18 @@ public class AreaToolsClient implements ClientModInitializer {
             }
 
             if (player.getMainHandItem().is(AreaItems.SPAWNPOINT_SETTER)) {
-                renderSpawnpointSetter(context, poseStack);
+                renderSpawnpointSetter(context, poseStack, player.level());
             }
         });
     }
 
-    private static void renderSpawnpointSetter(WorldRenderContext context, PoseStack poseStack) {
+    private static void renderSpawnpointSetter(WorldRenderContext context, PoseStack poseStack, Level level) {
         poseStack.pushPose();
 
-        var cPos = context.camera().getPosition();
+        var cPos = context.worldState().cameraRenderState.pos;
         poseStack.translate(-cPos.x, -cPos.y, -cPos.z);
 
-        for (var area : AreaLib.getSavedData(context.world()).getAreas()) {
+        for (var area : AreaLib.getSavedData(level).getAreas()) {
             var component = area.get(AreaComponents.RESPAWN_POINT_COMPONENT);
 
             if (component == null) {
@@ -63,8 +64,8 @@ public class AreaToolsClient implements ClientModInitializer {
             }
 
             var pos = component.respawnPoint.add(0, 0.5, 0);
-            var size = new Vec3(0.2, 0.2 ,0.2);
-            ShapeRenderer.renderLineBox(poseStack, context.consumers().getBuffer(RenderType.lines()), new AABB(pos.subtract(size), pos.add(size)), 0.2f, 1, 0.2f, 1);
+            var size = new Vec3(0.2, 0.2, 0.2);
+            ShapeRenderer.renderLineBox(poseStack.last(), context.consumers().getBuffer(RenderType.lines()), new AABB(pos.subtract(size), pos.add(size)), 0.2f, 1, 0.2f, 1);
         }
 
         poseStack.popPose();
@@ -73,16 +74,16 @@ public class AreaToolsClient implements ClientModInitializer {
     private static void renderAreaCreator(WorldRenderContext context, PoseStack poseStack, Player player) {
         poseStack.pushPose();
 
-        var cPos = context.camera().getPosition();
+        var cPos = context.worldState().cameraRenderState.pos;
         poseStack.translate(-cPos.x, -cPos.y, -cPos.z);
 
-        ShapeRenderer.renderLineBox(poseStack, context.consumers().getBuffer(RenderType.lines()), AreaCreatorItem.getAABB(player), 1, 1, 1, 1);
+        ShapeRenderer.renderLineBox(poseStack.last(), context.consumers().getBuffer(RenderType.lines()), AreaCreatorItem.getAABB(player), 1, 1, 1, 1);
         poseStack.popPose();
     }
 
     public static void openChatScreen(String initial, int selectFrom, int selectTo) {
         Minecraft.getInstance().execute(() -> {
-            var screen = new ChatScreen(initial);
+            var screen = new ChatScreen(initial, false);
             Minecraft.getInstance().setScreen(screen);
 
             ((ChatScreenDuck) screen).area_tools$setCursorPosition(selectFrom, selectTo);
