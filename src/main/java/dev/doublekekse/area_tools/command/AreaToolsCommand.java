@@ -10,6 +10,7 @@ import dev.doublekekse.area_tools.component.area.RespawnPointComponent;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -31,7 +32,7 @@ public class AreaToolsCommand {
         trackEvent("on_exit", base, (track) -> track.onExit);
 
         dispatcher.register(
-            base.then(literal("spawnpoint").then(argument("area", AreaArgument.area()).then(argument("position", Vec3Argument.vec3()).executes(ctx -> {
+            base.then(literal("spawnpoint").then(argument("area", ResourceLocationArgument.id()).suggests(AreaArgument::listSuggestions).then(argument("position", Vec3Argument.vec3()).executes(ctx -> {
                 var server = ctx.getSource().getServer();
                 var area = AreaArgument.getArea(ctx, "area");
                 var position = Vec3Argument.getVec3(ctx, "position");
@@ -66,7 +67,7 @@ public class AreaToolsCommand {
     }
 
     static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<EventsComponent, List<String>> lookup) {
-        base.then(literal(trackEvent).then(literal("add").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
+        base.then(literal(trackEvent).then(literal("add").then(argument("area", ResourceLocationArgument.id()).suggests(AreaArgument::listSuggestions).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
             var server = ctx.getSource().getServer();
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
@@ -78,7 +79,7 @@ public class AreaToolsCommand {
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools." + trackEvent + ".add", command), false);
 
             return 1;
-        })))).then(literal("remove").then(argument("area", AreaArgument.area()).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
+        })))).then(literal("remove").then(argument("area", ResourceLocationArgument.id()).suggests(AreaArgument::listSuggestions).then(argument("command", StringArgumentType.greedyString()).executes(ctx -> {
             var server = ctx.getSource().getServer();
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
@@ -98,7 +99,7 @@ public class AreaToolsCommand {
             }
 
             return 1;
-        })))).then(literal("list").then(argument("area", AreaArgument.area()).executes(ctx -> {
+        })))).then(literal("list").then(argument("area", ResourceLocationArgument.id()).suggests(AreaArgument::listSuggestions).executes(ctx -> {
             var area = AreaArgument.getArea(ctx, "area");
             var component = area.get(AreaComponents.EVENTS_COMPONENT);
 
