@@ -28,7 +28,7 @@ import java.util.List;
 public abstract class ServerPlayerMixin extends Player implements ServerPlayerDuck {
     @Shadow
     @Final
-    public MinecraftServer server;
+    private MinecraftServer server;
 
     public ServerPlayerMixin(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
@@ -46,11 +46,14 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Inject(method = "<init>", at = @At("RETURN"))
     void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
         data = AreaSavedData.getServerData(minecraftServer);
-        oldTrackedAreas = data.findTrackedAreasContaining(this);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
+        if(oldTrackedAreas == null) {
+            oldTrackedAreas = data.findTrackedAreasContaining(this);
+        }
+
         var trackItems = data.findTrackedAreasContaining(this);
 
         var newItems = trackItems.stream().filter(a -> !oldTrackedAreas.contains(a));
