@@ -8,20 +8,23 @@ import net.minecraft.world.phys.Vec3;
 public class RespawnPointComponent implements AreaDataComponent {
     public Vec3 respawnPoint;
     public float respawnYaw;
+    public boolean skipDeathScreen;
 
     public RespawnPointComponent() {
 
     }
 
-    public RespawnPointComponent(Vec3 respawnPoint, float respawnYaw) {
+    public RespawnPointComponent(Vec3 respawnPoint, float respawnYaw, boolean skipDeathScreen) {
         this.respawnPoint = respawnPoint;
         this.respawnYaw = respawnYaw;
+        this.skipDeathScreen = skipDeathScreen;
     }
 
     @Override
     public void load(AreaSavedData areaSavedData, CompoundTag tag) {
         respawnPoint = toVec3(tag.getCompound("respawn_point").get());
         respawnYaw = tag.getFloat("respawn_yaw").orElse(0f);
+        skipDeathScreen = tag.getBooleanOr("skip_death_screen", false);
     }
 
     @Override
@@ -30,6 +33,7 @@ public class RespawnPointComponent implements AreaDataComponent {
 
         tag.put("respawn_point", toTag(respawnPoint));
         tag.putFloat("respawn_yaw", respawnYaw);
+        tag.putBoolean("skip_death_screen", skipDeathScreen);
 
         return tag;
     }

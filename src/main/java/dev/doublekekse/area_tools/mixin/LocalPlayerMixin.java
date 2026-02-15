@@ -5,6 +5,7 @@ import dev.doublekekse.area_lib.data.AreaClientData;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.compat.FiguraCompat;
 import dev.doublekekse.area_tools.duck.LocalPlayerDuck;
+import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlayerDuck {
@@ -67,5 +69,15 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements L
             FiguraCompat.setPanic(previousPanicValue);
             wasInPanicArea = false;
         }
+    }
+
+    @Inject(method = "shouldShowDeathScreen", at = @At("HEAD"), cancellable = true)
+    void shouldShowDeathScreen(CallbackInfoReturnable<Boolean> cir) {
+        var data = AreaClientData.getClientLevelData();
+        var areas = data.findTrackedAreasContaining(this);
+        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(AreaTools.smallestArea());
+
+        System.out.println("found respawn area");
+        area.ifPresent(value -> cir.setReturnValue(!value.get(AreaComponents.RESPAWN_POINT_COMPONENT).skipDeathScreen));
     }
 }

@@ -1,9 +1,12 @@
 package dev.doublekekse.area_tools.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.doublekekse.area_lib.command.argument.AreaArgument;
 import dev.doublekekse.area_tools.component.area.EventsComponent;
 import dev.doublekekse.area_tools.component.area.RespawnPointComponent;
@@ -34,27 +37,21 @@ public class AreaToolsCommand {
 
         dispatcher.register(
             base.then(literal("spawnpoint").then(argument("area", IdentifierArgument.id()).suggests(AreaArgument::listSuggestions).then(argument("position", Vec3Argument.vec3()).executes(ctx -> {
-                var server = ctx.getSource().getServer();
-                var area = AreaArgument.getArea(ctx, "area");
                 var position = Vec3Argument.getVec3(ctx, "position");
 
-                area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, 0));
-
-                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
-
-                return 1;
+                return spawnpoint(ctx, new RespawnPointComponent(position, 0, false));
             }).then(argument("yaw", FloatArgumentType.floatArg()).executes(ctx -> {
-                var server = ctx.getSource().getServer();
-                var area = AreaArgument.getArea(ctx, "area");
                 var position = Vec3Argument.getVec3(ctx, "position");
                 var yaw = FloatArgumentType.getFloat(ctx, "yaw");
 
-                area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, new RespawnPointComponent(position, yaw));
+                return spawnpoint(ctx, new RespawnPointComponent(position, yaw, false));
+            }).then(argument("skip_death_screen", BoolArgumentType.bool()).executes(ctx -> {
+                var position = Vec3Argument.getVec3(ctx, "position");
+                var yaw = FloatArgumentType.getFloat(ctx, "yaw");
+                var skipDeathScreen = BoolArgumentType.getBool(ctx, "skip_death_screen");
 
-                ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
-
-                return 1;
-            }))).then(literal("clear").executes(ctx -> {
+                return spawnpoint(ctx, new RespawnPointComponent(position, yaw, skipDeathScreen));
+            })))).then(literal("clear").executes(ctx -> {
                 var server = ctx.getSource().getServer();
                 var area = AreaArgument.getArea(ctx, "area");
 
@@ -65,6 +62,17 @@ public class AreaToolsCommand {
                 return 1;
             }))))
         );
+    }
+
+    private static int spawnpoint(CommandContext<CommandSourceStack> ctx, RespawnPointComponent component) throws CommandSyntaxException {
+        var server = ctx.getSource().getServer();
+        var area = AreaArgument.getArea(ctx, "area");
+
+        area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, component);
+
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
+
+        return 1;
     }
 
     static void trackEvent(String trackEvent, LiteralArgumentBuilder<CommandSourceStack> base, Function<EventsComponent, List<String>> lookup) {
