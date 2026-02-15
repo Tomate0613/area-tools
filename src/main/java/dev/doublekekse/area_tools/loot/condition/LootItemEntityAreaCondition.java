@@ -4,18 +4,18 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.registry.AreaLootConditions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 public record LootItemEntityAreaCondition(
-    ResourceLocation areaId,
+    Identifier areaId,
     LootContext.EntityTarget entityTarget
 ) implements LootItemCondition {
     public static MapCodec<LootItemEntityAreaCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        ResourceLocation.CODEC.fieldOf("area_id").forGetter(LootItemEntityAreaCondition::areaId),
+        Identifier.CODEC.fieldOf("area_id").forGetter(LootItemEntityAreaCondition::areaId),
         LootContext.EntityTarget.CODEC.fieldOf("entity").forGetter(LootItemEntityAreaCondition::entityTarget)
     ).apply(instance, LootItemEntityAreaCondition::new));
 
@@ -28,6 +28,6 @@ public record LootItemEntityAreaCondition(
     @Override
     public boolean test(LootContext lootContext) {
         var area = AreaLib.getServerArea(lootContext.getLevel().getServer(), areaId);
-        return area != null && area.contains(lootContext.getParameter(this.entityTarget.getParam()));
+        return area != null && area.contains(lootContext.getParameter(this.entityTarget.contextParam()));
     }
 }

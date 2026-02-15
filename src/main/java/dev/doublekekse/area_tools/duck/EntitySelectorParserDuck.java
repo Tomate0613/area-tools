@@ -1,8 +1,8 @@
 package dev.doublekekse.area_tools.duck;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface EntitySelectorParserDuck {
-    ResourceLocation map_utils$getArea();
-    void map_utils$setArea(ResourceLocation id);
+    Identifier map_utils$getArea();
+    void map_utils$setArea(Identifier id);
 }

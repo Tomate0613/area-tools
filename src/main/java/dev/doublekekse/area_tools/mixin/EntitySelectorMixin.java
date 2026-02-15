@@ -4,9 +4,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.duck.EntitySelectorDuck;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.EntitySelector;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,10 +24,10 @@ public class EntitySelectorMixin implements EntitySelectorDuck {
     @Final
     private MinMaxBounds.Doubles range;
     @Unique
-    private ResourceLocation areaId;
+    private Identifier areaId;
 
     @Override
-    public void area_tools$setArea(ResourceLocation area) {
+    public void area_tools$setArea(Identifier area) {
         this.areaId = area;
     }
 

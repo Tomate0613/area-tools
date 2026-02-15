@@ -11,8 +11,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -65,7 +65,8 @@ public class AreaToolsClient implements ClientModInitializer {
 
             var pos = component.respawnPoint.add(0, 0.5, 0);
             var size = new Vec3(0.2, 0.2, 0.2);
-            ShapeRenderer.renderLineBox(poseStack.last(), context.consumers().getBuffer(RenderType.lines()), new AABB(pos.subtract(size), pos.add(size)), 0.2f, 1, 0.2f, 1);
+            Gizmos.cuboid(new AABB(pos.subtract(size), pos.add(size)), new GizmoStyle(0xff22ff22, 2.5f, 0x8822ff22)).setAlwaysOnTop();
+            //Gizmos.billboardText("Spawnpoint " + area.toString(), pos.add(0, 0.5, 0), TextGizmo.Style.whiteAndCentered()).setAlwaysOnTop();
         }
 
         poseStack.popPose();
@@ -77,7 +78,7 @@ public class AreaToolsClient implements ClientModInitializer {
         var cPos = context.worldState().cameraRenderState.pos;
         poseStack.translate(-cPos.x, -cPos.y, -cPos.z);
 
-        ShapeRenderer.renderLineBox(poseStack.last(), context.consumers().getBuffer(RenderType.lines()), AreaCreatorItem.getAABB(player), 1, 1, 1, 1);
+        Gizmos.cuboid(AreaCreatorItem.getAABB(player), GizmoStyle.stroke(-1));
         poseStack.popPose();
     }
 

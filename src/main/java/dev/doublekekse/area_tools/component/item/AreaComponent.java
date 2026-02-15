@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -17,16 +17,16 @@ import java.util.function.Consumer;
 
 public final class AreaComponent {
     public static final Codec<AreaComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        ResourceLocation.CODEC.fieldOf("area_id").forGetter(AreaComponent::areaId)
+        Identifier.CODEC.fieldOf("area_id").forGetter(AreaComponent::areaId)
     ).apply(instance, AreaComponent::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AreaComponent> STREAM_CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC, AreaComponent::areaId,
+        Identifier.STREAM_CODEC, AreaComponent::areaId,
         AreaComponent::new
     );
-    private final ResourceLocation areaId;
+    private final Identifier areaId;
 
-    public AreaComponent(ResourceLocation areaId) {
+    public AreaComponent(Identifier areaId) {
         this.areaId = areaId;
     }
 
@@ -48,7 +48,7 @@ public final class AreaComponent {
         return isInArea(entity.level(), entity.position());
     }
 
-    public ResourceLocation areaId() {
+    public Identifier areaId() {
         return areaId;
     }
 
