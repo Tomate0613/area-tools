@@ -8,7 +8,7 @@ import dev.doublekekse.area_tools.registry.AreaItems;
 import dev.doublekekse.area_tools.registry.AreaLootConditions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +28,7 @@ public class AreaTools implements ModInitializer {
         AreaComponents.register();
         AreaLootConditions.register();
 
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {
             content.accept(AreaItems.AREA_CREATOR);
             content.accept(AreaItems.SPAWNPOINT_SETTER);
         });

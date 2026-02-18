@@ -7,8 +7,8 @@ import dev.doublekekse.area_tools.item.AreaCreatorItem;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.gizmos.GizmoStyle;
@@ -23,7 +23,7 @@ public class AreaToolsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        WorldRenderEvents.AFTER_ENTITIES.register((context) -> {
+        LevelRenderEvents.BEFORE_GIZMOS.register((context) -> {
             var player = Minecraft.getInstance().player;
 
             if (player == null) {
@@ -34,7 +34,7 @@ public class AreaToolsClient implements ClientModInitializer {
                 return;
             }
 
-            var poseStack = context.matrices();
+            var poseStack = context.poseStack();
 
             if (poseStack == null) {
                 return;
@@ -50,10 +50,10 @@ public class AreaToolsClient implements ClientModInitializer {
         });
     }
 
-    private static void renderSpawnpointSetter(WorldRenderContext context, PoseStack poseStack, Level level) {
+    private static void renderSpawnpointSetter(LevelRenderContext context, PoseStack poseStack, Level level) {
         poseStack.pushPose();
 
-        var cPos = context.worldState().cameraRenderState.pos;
+        var cPos = context.levelState().cameraRenderState.pos;
         poseStack.translate(-cPos.x, -cPos.y, -cPos.z);
 
         for (var area : AreaLib.getSavedData(level).getAreas()) {
@@ -72,10 +72,10 @@ public class AreaToolsClient implements ClientModInitializer {
         poseStack.popPose();
     }
 
-    private static void renderAreaCreator(WorldRenderContext context, PoseStack poseStack, Player player) {
+    private static void renderAreaCreator(LevelRenderContext context, PoseStack poseStack, Player player) {
         poseStack.pushPose();
 
-        var cPos = context.worldState().cameraRenderState.pos;
+        var cPos = context.levelState().cameraRenderState.pos;
         poseStack.translate(-cPos.x, -cPos.y, -cPos.z);
 
         Gizmos.cuboid(AreaCreatorItem.getAABB(player), GizmoStyle.stroke(-1));

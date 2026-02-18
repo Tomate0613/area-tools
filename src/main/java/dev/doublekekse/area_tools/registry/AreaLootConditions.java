@@ -6,13 +6,12 @@ import dev.doublekekse.area_tools.loot.condition.LootItemEntityAreaCondition;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 public class AreaLootConditions {
-    public static LootItemConditionType AREA_CHECK = register(LootItemEntityAreaCondition.CODEC, "area_check");
+    public static MapCodec<? extends LootItemCondition> AREA_CHECK = register(LootItemEntityAreaCondition.CODEC, "area_check");
 
-    private static LootItemConditionType register(MapCodec<? extends LootItemCondition> codec, String path) {
-        return Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, AreaTools.id(path), new LootItemConditionType(codec));
+    private static MapCodec<? extends LootItemCondition> register(MapCodec<? extends LootItemCondition> codec, String path) {
+        return Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, AreaTools.id(path), codec);
     }
 
     public static void register() {

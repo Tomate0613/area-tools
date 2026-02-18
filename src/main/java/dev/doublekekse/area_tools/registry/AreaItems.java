@@ -3,10 +3,12 @@ package dev.doublekekse.area_tools.registry;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.item.AreaCreatorItem;
 import dev.doublekekse.area_tools.item.SpawnpointSetterItem;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 
 import java.util.function.Function;
@@ -19,7 +21,16 @@ public class AreaItems {
         var location = AreaTools.id(path);
         var key = ResourceKey.create(Registries.ITEM, location);
 
-        return Items.registerItem(key, factory, properties);
+        return registerItem(key, factory, properties);
+    }
+
+    private static Item registerItem(final ResourceKey<Item> key, final Function<Item.Properties, Item> itemFactory, final Item.Properties properties) {
+        Item item = itemFactory.apply(properties.setId(key));
+        if (item instanceof BlockItem blockItem) {
+            blockItem.registerBlocks(Item.BY_BLOCK, item);
+        }
+
+        return Registry.register(BuiltInRegistries.ITEM, key, item);
     }
 
     public static void register() {
