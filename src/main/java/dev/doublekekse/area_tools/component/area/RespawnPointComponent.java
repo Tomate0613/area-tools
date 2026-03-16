@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 public class RespawnPointComponent implements AreaDataComponent {
     public Vec3 respawnPoint;
     public float respawnYaw;
+    // TODO Make this optional rather than setting it to false when not specified in the command
     public boolean skipDeathScreen;
 
     public RespawnPointComponent() {
