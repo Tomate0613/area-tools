@@ -15,6 +15,7 @@
   ],
   "client": [
     "ChatScreenMixin",
+    "ClientPacketListenerMixin",
     "LocalPlayerMixin",
     "MinecraftMixin",
     "MultiPlayerGameModeMixin"
