@@ -34,8 +34,8 @@ public class AreaTools implements ModInitializer {
         });
 
         CommandRegistrationCallback.EVENT.register(
-            (dispatcher, registryAccess, environment) -> {
-                AreaToolsCommand.register(dispatcher);
+            (dispatcher, commandBuildContext, environment) -> {
+                AreaToolsCommand.register(dispatcher, commandBuildContext);
             }
         );
     }
