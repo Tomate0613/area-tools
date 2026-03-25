@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.doublekekse.area_lib.Area;
 import dev.doublekekse.area_lib.command.argument.AreaArgument;
 import dev.doublekekse.area_tools.component.area.EnvironmentAttributesComponent;
 import dev.doublekekse.area_tools.component.area.EventsComponent;
@@ -91,7 +92,22 @@ public class AreaToolsCommand {
                     area.invalidate(ctx.getSource().getServer());
 
                     return 1;
-                })))).then(literal("timeline")
+                })))).then(literal("reset").then(argument("environment_attribute", ResourceArgument.resource(commandBuildContext, Registries.ENVIRONMENT_ATTRIBUTE)).executes(ctx -> {
+                    var area = AreaArgument.getArea(ctx, "area");
+                    var environmentAttribute = ResourceArgument.getResource(ctx, "environment_attribute", Registries.ENVIRONMENT_ATTRIBUTE);
+                    var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+
+                    if (c == null) {
+                        return 0;
+                    }
+
+                    c.attributes.remove(environmentAttribute.value());
+
+                    cleanupEnvironmentAttributesComponent(area);
+                    area.invalidate(ctx.getSource().getServer());
+
+                    return 1;
+                }))).then(literal("timeline")
                     .then(literal("set").then(argument("timeline", ResourceArgument.resource(commandBuildContext, Registries.TIMELINE)).executes(ctx -> {
                         var timeline = ResourceArgument.getTimeline(ctx, "timeline");
                         var area = AreaArgument.getArea(ctx, "area");
@@ -105,15 +121,15 @@ public class AreaToolsCommand {
 
                         return 1;
                     }))).then(literal("reset").executes(ctx -> {
-
                         var area = AreaArgument.getArea(ctx, "area");
                         var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
 
-                        if(c == null) {
+                        if (c == null) {
                             return 0;
                         }
 
                         c.resetTimeline();
+                        cleanupEnvironmentAttributesComponent(area);
 
                         area.invalidate(ctx.getSource().getServer());
 
@@ -122,6 +138,18 @@ public class AreaToolsCommand {
                 )
             ))
         );
+    }
+
+    private static void cleanupEnvironmentAttributesComponent(Area area) {
+        var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+
+        if (c == null) {
+            return;
+        }
+
+        if (c.isEmpty()) {
+            area.remove(null, AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+        }
     }
 
     private static int spawnpoint(CommandContext<CommandSourceStack> ctx, RespawnPointComponent component) throws CommandSyntaxException {

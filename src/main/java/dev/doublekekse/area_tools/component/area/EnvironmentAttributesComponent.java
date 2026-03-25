@@ -40,7 +40,7 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
                 return null;
             }
 
-            if(!timeline.attributes().contains(attribute)) {
+            if (!timeline.attributes().contains(attribute)) {
                 return null;
             }
             samplers.put(attribute, timeline.createTrackSampler(attribute, clockManager));
@@ -84,6 +84,10 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
     public void resetTimeline() {
         timeline = null;
         timelineIdentifier = null;
+    }
+
+    public boolean isEmpty() {
+        return timelineIdentifier == null && attributes.isEmpty();
     }
 
     @SuppressWarnings("unchecked")
