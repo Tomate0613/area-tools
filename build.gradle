@@ -1,4 +1,3 @@
-
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
@@ -41,6 +40,14 @@ dependencies {
 
     implementation "maven.modrinth:area_lib:0.6.0+26.1"
     compileOnly "maven.modrinth:figura:0.1.5+1.21.1"
+
+    def sliderJar = file("libs/slider-1.0.0.jar")
+    if (sliderJar.exists()) {
+        dependencies {
+            compileOnly files(sliderJar)
+            localRuntime files(sliderJar)
+        }
+    }
 }
 
 processResources {
@@ -74,7 +81,7 @@ jar {
     inputs.property "archivesName", project.base.archivesName
 
     from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}"}
+        rename { "${it}_${inputs.properties.archivesName}" }
     }
 }
 
