@@ -71,6 +71,22 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
         return timeline;
     }
 
+    public boolean overridesAttribute(EnvironmentAttribute<?> attribute) {
+        if (attributes.get(attribute) != null) {
+            return true;
+        }
+
+        if (samplers.get(attribute) != null) {
+            return true;
+        }
+
+        if (timeline != null) {
+            return timeline.attributes().contains(attribute);
+        }
+
+        return false;
+    }
+
     public void setTimeline(Identifier id) {
         timeline = null;
         timelineIdentifier = id;

@@ -1,6 +1,7 @@
 package dev.doublekekse.area_tools;
 
 import dev.doublekekse.area_lib.Area;
+import dev.doublekekse.area_tools.attribute.AreaLayers;
 import dev.doublekekse.area_tools.command.AreaToolsCommand;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import dev.doublekekse.area_tools.registry.AreaItemComponents;
@@ -27,6 +28,8 @@ public class AreaTools implements ModInitializer {
         AreaItemComponents.register();
         AreaComponents.register();
         AreaLootConditions.register();
+
+        AreaLayers.registerListeners();
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {
             content.accept(AreaItems.AREA_CREATOR);

@@ -14,11 +14,19 @@ public class EnvironmentAttributeSystemMixin {
     @Inject(method = "addDefaultLayers", at = @At("RETURN"))
     private static void addDefaultLayers(EnvironmentAttributeSystem.Builder builder, Level level, CallbackInfo ci) {
         var areaLayers = new AreaLayers(level);
+        var reg = BuiltInRegistries.ENVIRONMENT_ATTRIBUTE;
 
-        BuiltInRegistries.ENVIRONMENT_ATTRIBUTE.forEach(attribute -> {
+        var it = reg.iterator();
+        int i = 0;
+
+        while (it.hasNext()) {
+            var attribute = it.next();
+
             if (attribute.isPositional()) {
-                areaLayers.addLayer(builder, attribute);
+                areaLayers.addLayer(builder, attribute, i);
             }
-        });
+
+            i++;
+        }
     }
 }
