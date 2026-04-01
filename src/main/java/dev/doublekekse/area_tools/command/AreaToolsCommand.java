@@ -23,6 +23,7 @@ import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -146,7 +147,12 @@ public class AreaToolsCommand {
                         return 1;
                     }))
                 )
-            ))
+            )).then(literal("dump").then(argument("area", IdentifierArgument.id()).suggests(AreaArgument::listSuggestions).executes(ctx -> {
+                var area = AreaArgument.getArea(ctx, "area");
+                var tag = area.save();
+                ctx.getSource().sendSuccess(() -> NbtUtils.toPrettyComponent(tag), false);
+                return 1;
+            })))
         );
     }
 
