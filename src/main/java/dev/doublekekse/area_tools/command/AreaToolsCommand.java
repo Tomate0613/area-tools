@@ -78,6 +78,11 @@ public class AreaToolsCommand {
 
                     var parsed = environmentAttribute.value().valueCodec().parse(NbtOps.INSTANCE, value);
 
+                    if(!environmentAttribute.value().isPositional()) {
+                        ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.set.error_is_not_positional", environmentAttribute.toString()));
+                        return 0;
+                    }
+
                     if (parsed.error().isPresent()) {
                         ctx.getSource().sendFailure(Component.literal(parsed.error().get().message()));
                         return 0;
@@ -91,6 +96,7 @@ public class AreaToolsCommand {
                     area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT).attributes.put((EnvironmentAttribute<Object>) environmentAttribute.value(), parsed.getOrThrow());
                     area.invalidate(ctx.getSource().getServer());
 
+                    ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.set", environmentAttribute.key().identifier().toString(), area.toString(), value.toString()), true);
                     return 1;
                 })))).then(literal("reset").then(argument("environment_attribute", ResourceArgument.resource(commandBuildContext, Registries.ENVIRONMENT_ATTRIBUTE)).executes(ctx -> {
                     var area = AreaArgument.getArea(ctx, "area");
@@ -98,6 +104,7 @@ public class AreaToolsCommand {
                     var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
 
                     if (c == null) {
+                        ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.error_no_component"));
                         return 0;
                     }
 
@@ -105,7 +112,7 @@ public class AreaToolsCommand {
 
                     cleanupEnvironmentAttributesComponent(area);
                     area.invalidate(ctx.getSource().getServer());
-
+                    ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.reset", environmentAttribute.key().identifier().toString(), area.toString()), true);
                     return 1;
                 }))).then(literal("timeline")
                     .then(literal("set").then(argument("timeline", ResourceArgument.resource(commandBuildContext, Registries.TIMELINE)).executes(ctx -> {
@@ -119,12 +126,14 @@ public class AreaToolsCommand {
                         area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT).setTimeline(timeline);
                         area.invalidate(ctx.getSource().getServer());
 
+                        ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.timeline.set", area.toString(), timeline.key().identifier().toString()), true);
                         return 1;
                     }))).then(literal("reset").executes(ctx -> {
                         var area = AreaArgument.getArea(ctx, "area");
                         var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
 
                         if (c == null) {
+                            ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.error_no_component"));
                             return 0;
                         }
 
@@ -133,6 +142,7 @@ public class AreaToolsCommand {
 
                         area.invalidate(ctx.getSource().getServer());
 
+                        ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.timeline.reset", area.toString()), true);
                         return 1;
                     }))
                 )

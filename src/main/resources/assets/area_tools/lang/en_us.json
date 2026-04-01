@@ -18,5 +18,13 @@
 
   "commands.area_tools.area_tools.track_event.no_events": "No events",
 
-  "commands.area_tools.area_tools.track_event.list.remove": "[remove]"
+  "commands.area_tools.area_tools.track_event.list.remove": "[remove]",
+
+  "commands.area_tools.area_tools.environment_attribute.set": "Set environment attribute \"%s\" for area \"%s\" to %s",
+  "commands.area_tools.area_tools.environment_attribute.reset": "Reset attribute \"%s\" for area \"%s\"",
+  "commands.area_tools.area_tools.environment_attribute.timeline.set": "Set timeline of \"%s\" to \"%s\"",
+  "commands.area_tools.area_tools.environment_attribute.timeline.reset": "Reset timeline of \"%s\"",
+
+  "commands.area_tools.area_tools.environment_attribute.set.error_is_not_positional": "%s is not a positional attribute",
+  "commands.area_tools.area_tools.environment_attribute.error_no_component": "Area does not have environment attributes"
 }
