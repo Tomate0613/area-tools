@@ -71,7 +71,7 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
         return timeline;
     }
 
-    public boolean overridesAttribute(EnvironmentAttribute<?> attribute) {
+    public boolean overridesAttribute(EnvironmentAttribute<?> attribute, Level level) {
         if (attributes.get(attribute) != null) {
             return true;
         }
@@ -80,6 +80,7 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
             return true;
         }
 
+        var timeline = getTimeline(level);
         if (timeline != null) {
             return timeline.attributes().contains(attribute);
         }

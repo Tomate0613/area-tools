@@ -2,7 +2,6 @@ package dev.doublekekse.area_tools.attribute;
 
 import dev.doublekekse.area_lib.Area;
 import dev.doublekekse.area_lib.AreaLib;
-import dev.doublekekse.area_lib.data.AreaSavedData;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -19,6 +18,7 @@ public class AreaLayers {
     private Vec3 lastSampledPosition;
     private List<Area> areas;
 
+    private static boolean overridesDirty = true;
     private static boolean[] anyOverrides;
 
     public AreaLayers(Level level) {
@@ -28,14 +28,20 @@ public class AreaLayers {
     @SuppressWarnings("unchecked")
     private <T> EnvironmentAttributeLayer.Positional<T> layer(EnvironmentAttribute<T> attribute, int index) {
         return (baseValue, pos, _) -> {
+            if (overridesDirty) {
+                checkOverrides();
+                overridesDirty = false;
+            }
+
             if (!anyOverrides[index]) {
                 return baseValue;
             }
+
             if (!pos.equals(this.lastSampledPosition)) {
                 this.lastSampledPosition = pos;
 
                 var savedData = AreaLib.getSavedData(level);
-                this.areas = savedData.findTrackedAreasContaining(level, pos);
+                this.areas = savedData.findTrackedAreasContaining(level, pos, area -> area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT));
             }
 
             T value = null;
@@ -54,10 +60,6 @@ public class AreaLayers {
 
                 var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
 
-                if (ea == null) {
-                    continue;
-                }
-
                 var sampler = ea.getSampler((EnvironmentAttribute<Object>) attribute, level.clockManager(), level);
                 if (sampler != null) {
                     assert ea.timeline != null;
@@ -66,10 +68,11 @@ public class AreaLayers {
                     continue;
                 }
 
-                value = (T) ea.attributes.get(attribute);
+                var v = (T) ea.attributes.get(attribute);
 
-                if (value != null) {
+                if (v != null) {
                     minSize = areaSize;
+                    value = v;
                 }
             }
 
@@ -85,7 +88,8 @@ public class AreaLayers {
         builder.addPositionalLayer(attribute, layer(attribute, index));
     }
 
-    static void checkOverrides(AreaSavedData savedData) {
+    private void checkOverrides() {
+        var savedData = AreaLib.getSavedData(level);
         var reg = BuiltInRegistries.ENVIRONMENT_ATTRIBUTE;
 
         var it = reg.iterator();
@@ -99,7 +103,7 @@ public class AreaLayers {
 
             for (var area : savedData.getAreas()) {
                 var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
-                if (ea != null && ea.overridesAttribute(attribute)) {
+                if (ea != null && ea.overridesAttribute(attribute, level)) {
                     overriden = true;
                     break;
                 }
@@ -113,6 +117,8 @@ public class AreaLayers {
     }
 
     public static void registerListeners() {
-        AreaLib.addListener(AreaLayers::checkOverrides);
+        AreaLib.addListener(_ -> {
+            overridesDirty = true;
+        });
     }
 }

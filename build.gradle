@@ -38,7 +38,7 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 
-    implementation "maven.modrinth:area_lib:0.6.1+26.1"
+    implementation "maven.modrinth:area_lib:0.7.0+26.1"
     compileOnly "maven.modrinth:figura:0.1.5+1.21.1"
 
     def sliderJar = file("libs/slider-1.0.0.jar")
