@@ -10,13 +10,13 @@ import net.minecraft.world.attribute.EnvironmentAttributeSystem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
+import java.util.Collection;
 
 public class AreaLayers {
     Level level;
 
     private Vec3 lastSampledPosition;
-    private List<Area> areas;
+    private Collection<Area> areas;
 
     private static boolean overridesDirty = true;
     private static boolean[] anyOverrides;
@@ -41,7 +41,7 @@ public class AreaLayers {
                 this.lastSampledPosition = pos;
 
                 var savedData = AreaLib.getSavedData(level);
-                this.areas = savedData.findTrackedAreasContaining(level, pos, area -> area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT));
+                this.areas = savedData.getSampledAreas(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT, level, pos);
             }
 
             T value = null;

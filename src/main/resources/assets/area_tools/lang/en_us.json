@@ -26,5 +26,7 @@
   "commands.area_tools.area_tools.environment_attribute.timeline.reset": "Reset timeline of \"%s\"",
 
   "commands.area_tools.area_tools.environment_attribute.set.error_is_not_positional": "%s is not a positional attribute",
-  "commands.area_tools.area_tools.environment_attribute.error_no_component": "Area does not have environment attributes"
+  "commands.area_tools.area_tools.environment_attribute.error_no_component": "Area does not have environment attributes",
+
+  "argument.area_tools.entity.options.area.description": "Area the entity is in"
 }

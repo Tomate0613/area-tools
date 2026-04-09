@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jspecify.annotations.NonNull;
 
 public class AreaCreatorItem extends Item {
     public static BlockPos from = null;
@@ -20,7 +21,7 @@ public class AreaCreatorItem extends Item {
     }
 
     @Override
-    public boolean isFoil(ItemStack itemStack) {
+    public boolean isFoil(@NonNull ItemStack itemStack) {
         return true;
     }
 
@@ -47,7 +48,7 @@ public class AreaCreatorItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand interactionHand) {
+    public @NonNull InteractionResult use(Level level, @NonNull Player player, @NonNull InteractionHand interactionHand) {
         if (!level.isClientSide()) {
             return InteractionResult.CONSUME;
         }

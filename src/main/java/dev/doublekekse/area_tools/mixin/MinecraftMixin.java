@@ -18,7 +18,7 @@ public class MinecraftMixin {
     public LocalPlayer player;
 
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V", at = @At("HEAD"))
-    void disconnect(Screen screen, boolean bl, CallbackInfo ci) {
+    void disconnect(Screen screen, boolean keepResourcePacks, CallbackInfo ci) {
         if (player == null) {
             return;
         }

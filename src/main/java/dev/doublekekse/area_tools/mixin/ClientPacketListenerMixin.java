@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class ClientPacketListenerMixin {
     /**
      * @reason We modify the return result of getShowDeathScreen(), however we want to copy the real (gamerule) value here.
-     * If some other mod does the same its a compat issue anyway, so I'd rather not silently fail
+     * If some other mod does the same it's a compat issue anyway, so I'd rather not silently fail
      */
     @Redirect(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;shouldShowDeathScreen()Z"))
     boolean replaceShowDeathScreen(LocalPlayer instance) {

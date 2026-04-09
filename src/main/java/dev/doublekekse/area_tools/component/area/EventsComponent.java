@@ -1,54 +1,29 @@
 package dev.doublekekse.area_tools.component.area;
 
-import dev.doublekekse.area_lib.component.AreaDataComponent;
-import dev.doublekekse.area_lib.data.AreaSavedData;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class EventsComponent implements AreaDataComponent {
-    public List<String> onEnter = new ArrayList<>();
-    public List<String> onExit = new ArrayList<>();
+public class EventsComponent {
+    public List<String> onEnter;
+    public List<String> onExit;
 
-    @Override
-    public void load(AreaSavedData areaSavedData, CompoundTag tag) {
-        onEnter = toStringList(tag.getList("on_enter").get());
-        onExit = toStringList(tag.getList("on_exit").get());
+    public EventsComponent() {
+        onEnter = new ArrayList<>();
+        onExit = new ArrayList<>();
     }
 
-    @Override
-    public CompoundTag save() {
-        var tag = new CompoundTag();
-
-        tag.put("on_enter", toTag(onEnter));
-        tag.put("on_exit", toTag(onExit));
-
-        return tag;
+    public EventsComponent(List<String> onEnter, List<String> onExit) {
+        this.onEnter = new ArrayList<>(onEnter);
+        this.onExit = new ArrayList<>(onExit);
     }
 
-    public ListTag toTag(Collection<?> list) {
-        var listTag = new ListTag();
-
-        for (var value : list) {
-            listTag.add(StringTag.valueOf(String.valueOf(value)));
-        }
-
-        return listTag;
-    }
-
-    public List<String> toStringList(ListTag listTag) {
-        var list = new ArrayList<String>();
-
-        for (var value : listTag) {
-            list.add(value.asString().get());
-        }
-
-        return list;
-    }
+    public static Codec<EventsComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        Codec.STRING.listOf().fieldOf("on_enter").forGetter(v -> v.onEnter),
+        Codec.STRING.listOf().fieldOf("on_exit").forGetter(v -> v.onExit)
+    ).apply(instance, EventsComponent::new));
 
     public boolean isEmpty() {
         return onEnter.isEmpty() && onExit.isEmpty();

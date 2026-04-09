@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 @Mixin(EntitySelectorOptions.class)
 public abstract class EntitySelectorOptionsMixin {
     @Shadow
-    private static void register(String string, EntitySelectorOptions.Modifier modifier, Predicate<EntitySelectorParser> predicate, Component component) {}
+    private static void register(String name, EntitySelectorOptions.Modifier modifier, Predicate<EntitySelectorParser> predicate, Component description) {}
 
     @Inject(method = "bootStrap", at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/arguments/selector/options/EntitySelectorOptions;register(Ljava/lang/String;Lnet/minecraft/commands/arguments/selector/options/EntitySelectorOptions$Modifier;Ljava/util/function/Predicate;Lnet/minecraft/network/chat/Component;)V", ordinal = 0))
     private static void bootStrap(CallbackInfo ci) {

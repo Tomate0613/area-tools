@@ -6,6 +6,7 @@ import dev.doublekekse.area_lib.AreaLib;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.jspecify.annotations.NonNull;
 
 public record LootItemEntityAreaCondition(
     Identifier areaId,
@@ -23,7 +24,7 @@ public record LootItemEntityAreaCondition(
     }
 
     @Override
-    public MapCodec<? extends LootItemCondition> codec() {
+    public @NonNull MapCodec<? extends LootItemCondition> codec() {
         return CODEC;
     }
 }

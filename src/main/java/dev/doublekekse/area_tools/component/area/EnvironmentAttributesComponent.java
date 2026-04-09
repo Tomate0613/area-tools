@@ -1,7 +1,6 @@
 package dev.doublekekse.area_tools.component.area;
 
-import dev.doublekekse.area_lib.component.AreaDataComponent;
-import dev.doublekekse.area_lib.data.AreaSavedData;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnvironmentAttributesComponent implements AreaDataComponent {
+public class EnvironmentAttributesComponent {
     public Map<EnvironmentAttribute<Object>, Object> attributes = new HashMap<>();
     @Nullable
     public Timeline timeline;
@@ -27,6 +26,12 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
     public Identifier timelineIdentifier;
 
     public Map<EnvironmentAttribute<Object>, AttributeTrackSampler<Object, ?>> samplers = new HashMap<>();
+
+    public static Codec<EnvironmentAttributesComponent> CODEC = CompoundTag.CODEC.xmap(a -> {
+        var v = new EnvironmentAttributesComponent();
+        v.load(a);
+        return v;
+    }, EnvironmentAttributesComponent::save);
 
     public @Nullable AttributeTrackSampler<Object, ?> getSampler(EnvironmentAttribute<Object> attribute, ClockManager clockManager, Level level) {
         if (timelineIdentifier == null) {
@@ -108,8 +113,7 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    public void load(AreaSavedData savedData, CompoundTag compoundTag) {
+    public void load(CompoundTag compoundTag) {
         attributes = new HashMap<>();
 
         var attributesTag = compoundTag.getCompoundOrEmpty("attributes");
@@ -126,7 +130,6 @@ public class EnvironmentAttributesComponent implements AreaDataComponent {
         compoundTag.getString("timeline").ifPresent(s -> setTimeline(Identifier.parse(s)));
     }
 
-    @Override
     public CompoundTag save() {
         var tag = new CompoundTag();
 

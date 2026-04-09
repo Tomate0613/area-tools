@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
+import java.util.Collection;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements ServerPlayerDuck {
@@ -30,31 +30,31 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Final
     private MinecraftServer server;
 
+    @Shadow
+    protected abstract boolean isPvpAllowed();
+
     public ServerPlayerMixin(Level level, GameProfile gameProfile) {
         super(level, gameProfile);
     }
 
-    @Shadow
-    protected abstract boolean isPvpAllowed();
-
     @Unique
-    List<Area> oldTrackedAreas;
+    Collection<Area> oldTrackedAreas;
     @Unique
     AreaSavedData data;
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
-        data = AreaSavedData.getServerData(minecraftServer);
+    void init(MinecraftServer server, ServerLevel level, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
+        data = AreaSavedData.getServerData(server);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     void tick(CallbackInfo ci) {
         if(oldTrackedAreas == null) {
-            oldTrackedAreas = data.findTrackedAreasContaining(this);
+            oldTrackedAreas = data.getEntityTrackedAreas(this);
         }
 
-        var trackItems = data.findTrackedAreasContaining(this);
+        var trackItems = data.getEntityTrackedAreas(this);
 
         var newItems = trackItems.stream().filter(a -> !oldTrackedAreas.contains(a));
         var oldItems = oldTrackedAreas.stream().filter(a -> !trackItems.contains(a));
@@ -79,23 +79,22 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     }
 
     @Override
-    public List<Area> area_tools$getAreas() {
+    public Collection<Area> area_tools$getAreas() {
         return oldTrackedAreas;
     }
 
     @Inject(method = "canHarmPlayer", at = @At("HEAD"), cancellable = true)
-    void canHarmPlayer(Player player, CallbackInfoReturnable<Boolean> cir) {
-        var savedData = AreaLib.getSavedData(player.level());
-        var pvpAllowed = isPvpAllowed();
-        var area = savedData.get(AreaTools.id(pvpAllowed ? "pvp_disabled" : "pvp_enabled"));
+    void canHarmPlayer(Player target, CallbackInfoReturnable<Boolean> cir) {
+        var savedData = AreaLib.getSavedData(target.level());
+        var isToggled = savedData.isInSampledAreaWith(AreaComponents.PVP_TOGGLED, this);
 
-        if (area != null && area.contains(player)) {
-            cir.setReturnValue(!pvpAllowed);
+        if (isToggled) {
+            cir.setReturnValue(!isPvpAllowed());
         }
     }
 
     @Inject(method = "restoreFrom", at = @At("HEAD"))
-    void restoreFrom(ServerPlayer serverPlayer, boolean bl, CallbackInfo ci) {
-        oldTrackedAreas = ((ServerPlayerDuck) serverPlayer).area_tools$getAreas();
+    void restoreFrom(ServerPlayer oldPlayer, boolean restoreAll, CallbackInfo ci) {
+        oldTrackedAreas = ((ServerPlayerDuck) oldPlayer).area_tools$getAreas();
     }
 }

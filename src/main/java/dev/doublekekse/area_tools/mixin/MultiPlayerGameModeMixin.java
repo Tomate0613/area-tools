@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +17,7 @@ public class MultiPlayerGameModeMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
-    void destroyBlock(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    void destroyBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         var player = minecraft.player;
         assert player != null;
 
@@ -32,7 +31,7 @@ public class MultiPlayerGameModeMixin {
         var component = components.get(AreaItemComponents.CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(minecraft.level, blockPos.getCenter())) {
+        if (!component.isInArea(minecraft.level, pos.getCenter())) {
             cir.setReturnValue(false);
         }
     }

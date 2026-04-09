@@ -33,19 +33,19 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     public abstract void setCount(int i);
 
     @Inject(method = "addDetailsToTooltip", at = @At("RETURN"))
-    void getTooltipLines(Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Player player, TooltipFlag tooltipFlag, Consumer<Component> consumer, CallbackInfo ci) {
+    void getTooltipLines(Item.TooltipContext context, TooltipDisplay display, Player player, TooltipFlag tooltipFlag, Consumer<Component> builder, CallbackInfo ci) {
         var isCreative = player != null && player.isCreative();
 
         if (has(CAN_USE_IN_AREA)) {
-            get(CAN_USE_IN_AREA).addToTooltip("can_use_in_area", isCreative, consumer);
+            get(CAN_USE_IN_AREA).addToTooltip("can_use_in_area", isCreative, builder);
         }
         if (has(DISSOLVE)) {
-            get(DISSOLVE).addToTooltip("dissolve", isCreative, consumer);
+            get(DISSOLVE).addToTooltip("dissolve", isCreative, builder);
         }
     }
 
     @Inject(method = "inventoryTick", at = @At("HEAD"))
-    void tick(Level level, Entity entity, EquipmentSlot equipmentSlot, CallbackInfo ci) {
+    void tick(Level level, Entity owner, EquipmentSlot slot, CallbackInfo ci) {
         if (!has(DISSOLVE)) {
             return;
         }
@@ -53,13 +53,13 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         var component = get(DISSOLVE);
         assert component != null;
 
-        if (!component.isInArea(entity)) {
+        if (!component.isInArea(owner)) {
             setCount(0);
         }
     }
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    void use(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
+    void use(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
             return;
         }
@@ -73,12 +73,12 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     }
 
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-    void useOn(UseOnContext useOnContext, CallbackInfoReturnable<InteractionResult> cir) {
+    void useOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         if (!has(CAN_USE_IN_AREA)) {
             return;
         }
 
-        var player = useOnContext.getPlayer();
+        var player = context.getPlayer();
         if (player == null || player.mayBuild()) {
            return;
         }
@@ -86,21 +86,21 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         var component = get(CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(useOnContext.getLevel(), useOnContext.getClickLocation())) {
+        if (!component.isInArea(context.getLevel(), context.getClickLocation())) {
             cir.setReturnValue(InteractionResult.FAIL);
         }
     }
 
     @Inject(method = "mineBlock", at = @At("HEAD"), cancellable = true)
-    void mineBlock(Level level, BlockState blockState, BlockPos blockPos, Player player, CallbackInfo ci) {
-        if (player.mayBuild() || !has(CAN_USE_IN_AREA)) {
+    void mineBlock(Level level, BlockState state, BlockPos pos, Player owner, CallbackInfo ci) {
+        if (owner.mayBuild() || !has(CAN_USE_IN_AREA)) {
             return;
         }
 
         var component = get(CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(level, blockPos.getCenter())) {
+        if (!component.isInArea(level, pos.getCenter())) {
             ci.cancel();
         }
     }

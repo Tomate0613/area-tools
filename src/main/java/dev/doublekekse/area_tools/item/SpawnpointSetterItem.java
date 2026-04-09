@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class SpawnpointSetterItem extends Item {
     public SpawnpointSetterItem(Properties properties) {
@@ -16,7 +17,7 @@ public class SpawnpointSetterItem extends Item {
     }
 
     @Override
-    public boolean isFoil(ItemStack itemStack) {
+    public boolean isFoil(@NonNull ItemStack itemStack) {
         return true;
     }
 

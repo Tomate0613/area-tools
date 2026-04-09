@@ -22,7 +22,7 @@ public class ServerPlayerGameModeMixin {
     protected ServerLevel level;
 
     @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    void destroyBlock(BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
+    void destroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         var itemStack = player.getMainHandItem();
         var components = itemStack.getComponents();
 
@@ -33,7 +33,7 @@ public class ServerPlayerGameModeMixin {
         var component = components.get(AreaItemComponents.CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(level, blockPos.getCenter())) {
+        if (!component.isInArea(level, pos.getCenter())) {
             cir.setReturnValue(false);
         }
     }

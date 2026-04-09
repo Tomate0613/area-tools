@@ -43,20 +43,14 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlaye
             return;
         }
 
-        var area = savedData.get(AreaTools.id("figura_panic"));
+        var shouldPanic = savedData.isInEntityTrackedAreaWith(AreaComponents.FIGURA_PANIC, this);
 
-        if (area == null) {
-            return;
-        }
-
-        var inArea = area.contains(this);
-
-        if (inArea && !wasInPanicArea) {
+        if (shouldPanic && !wasInPanicArea) {
             previousPanicValue = FiguraCompat.isPanic();
             FiguraCompat.setPanic(true);
             wasInPanicArea = true;
         }
-        if (!inArea && wasInPanicArea) {
+        if (!shouldPanic && wasInPanicArea) {
             FiguraCompat.setPanic(previousPanicValue);
             wasInPanicArea = false;
         }
@@ -82,7 +76,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlaye
     @Inject(method = "shouldShowDeathScreen", at = @At("HEAD"), cancellable = true)
     void shouldShowDeathScreen(CallbackInfoReturnable<Boolean> cir) {
         var data = AreaClientData.getClientLevelData();
-        var areas = data.findTrackedAreasContaining(this);
+        var areas = data.getEntityTrackedAreas(this);
         var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(AreaTools.smallestArea());
 
         System.out.println("found respawn area " + area + " : " + this.showDeathScreen);

@@ -31,13 +31,13 @@ public class EntitySelectorMixin implements EntitySelectorDuck {
         this.areaId = area;
     }
 
-    @ModifyVariable(method = "getPredicate", at = @At(value = "STORE"), ordinal = 2)
-    boolean enterIfBranch(boolean value) {
+    @ModifyVariable(method = "getPredicate", at = @At(value = "STORE"), name = "filterRange")
+    boolean enterIfBranch(boolean filterRange) {
         if (areaId != null) {
             return true;
         }
 
-        return value;
+        return filterRange;
     }
 
     //List<Predicate<Entity>>
