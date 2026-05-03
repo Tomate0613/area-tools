@@ -7,17 +7,13 @@
     "EntitySelectorMixin",
     "EntitySelectorOptionsMixin",
     "EntitySelectorParserMixin",
-    "ItemStackMixin",
     "PlayerListMixin",
-    "PlayerMixin",
-    "ServerPlayerGameModeMixin",
     "ServerPlayerMixin"
   ],
   "client": [
     "ChatScreenMixin",
     "LocalPlayerMixin",
-    "MinecraftMixin",
-    "MultiPlayerGameModeMixin"
+    "ClientLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

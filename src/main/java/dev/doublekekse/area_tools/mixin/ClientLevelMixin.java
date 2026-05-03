@@ -2,23 +2,17 @@ package dev.doublekekse.area_tools.mixin;
 
 import dev.doublekekse.area_tools.duck.LocalPlayerDuck;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.LocalPlayer;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.multiplayer.ClientLevel;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Minecraft.class)
-public class MinecraftMixin {
-    @Shadow
-    @Nullable
-    public LocalPlayer player;
-
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V", at = @At("HEAD"))
-    void disconnect(Screen screen, boolean bl, CallbackInfo ci) {
+@Mixin(ClientLevel.class)
+public class ClientLevelMixin {
+    @Inject(method = "disconnect", at = @At("HEAD"))
+    void disconnect(CallbackInfo ci) {
+        var player = Minecraft.getInstance().player;
         if (player == null) {
             return;
         }

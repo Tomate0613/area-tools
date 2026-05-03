@@ -10,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class AreaCreatorItem extends Item {
     public static BlockPos from = null;
@@ -39,15 +41,22 @@ public class AreaCreatorItem extends Item {
             return new AABB(getPos(player));
         }
 
-        if (AreaCreatorItem.to == null) {
-            return AABB.encapsulatingFullBlocks(AreaCreatorItem.from, getPos(player));
+        var from = AreaCreatorItem.from;
+        var to = getPos(player);
+        if (AreaCreatorItem.to != null) {
+            to = AreaCreatorItem.to;
         }
 
-        return AABB.encapsulatingFullBlocks(AreaCreatorItem.from, AreaCreatorItem.to);
+        var delta = Vec3.atCenterOf(to.subtract(from));
+        delta = new Vec3(delta.x > 0 ? 0.5 : -0.5, delta.y > 0 ? 0.5 : -0.5, delta.z > 0 ? 0.5 : -0.5);
+        var f = Vec3.atCenterOf(from).subtract(delta);
+        var t = Vec3.atCenterOf(to).add(delta);
+
+        return new AABB(f, t);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         if (!level.isClientSide) {
             var itemStack = player.getItemInHand(interactionHand);
             return InteractionResultHolder.consume(itemStack);

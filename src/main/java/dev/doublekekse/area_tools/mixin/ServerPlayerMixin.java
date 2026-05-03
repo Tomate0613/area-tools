@@ -9,7 +9,6 @@ import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +43,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
+    void init(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile, CallbackInfo ci) {
         data = AreaSavedData.getServerData(minecraftServer);
         oldTrackedAreas = data.findTrackedAreasContaining(this);
     }

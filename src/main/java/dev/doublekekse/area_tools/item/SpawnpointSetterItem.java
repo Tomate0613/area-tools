@@ -28,7 +28,7 @@ public class SpawnpointSetterItem extends Item {
             var data = AreaClientData.getClientLevelData();
             var spawnpointPos = position.above();
 
-            var area = data.findAllAreasContaining(level, position.getCenter());
+            var area = data.findAnyAreaContaining(level, position.getCenter());
             if (area != null) {
                 var areaId = area.getId().toString();
                 AreaToolsClient.openChatScreen(String.format("/%s spawnpoint %s %s %s %s", AreaToolsCommand.AREA_NAME, areaId, spawnpointPos.getX(), spawnpointPos.getY(), spawnpointPos.getZ()), 23, 23 + areaId.length());

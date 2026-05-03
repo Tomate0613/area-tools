@@ -2,9 +2,7 @@ package dev.doublekekse.area_tools;
 
 import dev.doublekekse.area_tools.command.AreaToolsCommand;
 import dev.doublekekse.area_tools.registry.AreaComponents;
-import dev.doublekekse.area_tools.registry.AreaItemComponents;
 import dev.doublekekse.area_tools.registry.AreaItems;
-import dev.doublekekse.area_tools.registry.AreaLootConditions;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -19,9 +17,7 @@ public class AreaTools implements ModInitializer {
     @Override
     public void onInitialize() {
         AreaItems.register();
-        AreaItemComponents.register();
         AreaComponents.register();
-        AreaLootConditions.register();
 
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.OP_BLOCKS).register(content -> {
             content.accept(AreaItems.AREA_CREATOR);
@@ -44,6 +40,6 @@ public class AreaTools implements ModInitializer {
     }
 
     public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath("area_tools", path);
+        return new ResourceLocation("area_tools", path);
     }
 }
