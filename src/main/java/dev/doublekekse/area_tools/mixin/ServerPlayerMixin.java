@@ -45,7 +45,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
 
     @Inject(method = "<init>", at = @At("RETURN"))
     void init(MinecraftServer server, ServerLevel level, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
-        data = AreaSavedData.getServerData(server);
+        data = AreaLib.getSavedData(server);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
