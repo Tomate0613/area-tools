@@ -86,7 +86,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     @Inject(method = "canHarmPlayer", at = @At("HEAD"), cancellable = true)
     void canHarmPlayer(Player target, CallbackInfoReturnable<Boolean> cir) {
         var savedData = AreaLib.getSavedData(target.level());
-        var isToggled = savedData.isInSampledAreaWith(AreaComponents.PVP_TOGGLED, this);
+        var isToggled = savedData.isInEntityTrackedAreaWith(AreaComponents.PVP_TOGGLED, this);
 
         if (isToggled) {
             cir.setReturnValue(!isPvpAllowed());

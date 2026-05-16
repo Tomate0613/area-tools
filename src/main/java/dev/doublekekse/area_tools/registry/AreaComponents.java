@@ -14,10 +14,13 @@ public final class AreaComponents {
     public static final EntityTrackedAreaComponentType<EventsComponent> EVENTS_COMPONENT = registerEntityTracked("events", EventsComponent.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> FIGURA_PANIC = registerEntityTracked("figura_panic", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> SOLO_PLAYER_RENDER = registerEntityTracked("solo_player_render", Unit.CODEC);
+    public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PARTICLES = registerEntityTracked("no_player_particles", Unit.CODEC);
+    public static final EntityTrackedAreaComponentType<Unit> NO_PUSHING = registerEntityTracked("no_pushing", Unit.CODEC);
+    public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PICK = registerEntityTracked("no_player_pick", Unit.CODEC);
+    public static final EntityTrackedAreaComponentType<Unit> PVP_TOGGLED = registerEntityTracked("pvp_toggled", Unit.CODEC);
 
     public static final SampledAreaComponentType<RespawnPointComponent> RESPAWN_POINT_COMPONENT = registerSampled("respawn_point", RespawnPointComponent.CODEC);
     public static final SampledAreaComponentType<EnvironmentAttributesComponent> ENVIRONMENT_ATTRIBUTES_COMPONENT = registerSampled("environment_attributes", EnvironmentAttributesComponent.CODEC);
-    public static final SampledAreaComponentType<Unit> PVP_TOGGLED = registerSampled("pvp_toggled", Unit.CODEC);
 
     private static <T> EntityTrackedAreaComponentType<T> registerEntityTracked(String path, Codec<T> codec) {
         var id = AreaTools.id(path);

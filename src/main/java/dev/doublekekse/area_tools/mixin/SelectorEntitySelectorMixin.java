@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(EntitySelector.class)
-public class EntitySelectorMixin implements EntitySelectorDuck {
+public class SelectorEntitySelectorMixin implements EntitySelectorDuck {
     @Shadow
     @Final
     private MinMaxBounds.Doubles range;
@@ -41,6 +41,7 @@ public class EntitySelectorMixin implements EntitySelectorDuck {
     }
 
     //List<Predicate<Entity>>
+
     @WrapOperation(method = "getPredicate", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
     boolean getPredicate(List<Predicate<Entity>> predicates, Object o, Operation<Boolean> original) {
         if (areaId != null) {

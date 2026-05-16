@@ -27,9 +27,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.Unit;
 import net.minecraft.world.attribute.EnvironmentAttribute;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
@@ -81,7 +79,7 @@ public class AreaToolsCommand {
 
                     var parsed = environmentAttribute.value().valueCodec().parse(NbtOps.INSTANCE, value);
 
-                    if(!environmentAttribute.value().isPositional()) {
+                    if (!environmentAttribute.value().isPositional()) {
                         ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.set.error_is_not_positional", environmentAttribute.toString()));
                         return 0;
                     }
@@ -154,24 +152,8 @@ public class AreaToolsCommand {
                 var tag = area.save();
                 ctx.getSource().sendSuccess(() -> NbtUtils.toPrettyComponent(tag), false);
                 return 1;
-            }))).then(
-                    literal("solo_player_render")
-                            .then(argument("area", IdentifierArgument.id()).suggests(AreaArgument::listSuggestions)
-                                    .then(literal("on").executes(ctx -> hidePlayers(ctx, true)))
-                                    .then(literal("off").executes(ctx -> hidePlayers(ctx, false)))
-                            )
-            )
+            })))
         );
-    }
-
-    private static int hidePlayers(CommandContext<CommandSourceStack> ctx, boolean hide) throws CommandSyntaxException {
-        var area = AreaArgument.getArea(ctx, "area");
-        if (hide) {
-            area.put(ctx.getSource().getServer(), AreaComponents.SOLO_PLAYER_RENDER, Unit.INSTANCE);
-        } else {
-            area.remove(ctx.getSource().getServer(), AreaComponents.SOLO_PLAYER_RENDER);
-        }
-        return 1;
     }
 
     private static void cleanupEnvironmentAttributesComponent(Area area) {

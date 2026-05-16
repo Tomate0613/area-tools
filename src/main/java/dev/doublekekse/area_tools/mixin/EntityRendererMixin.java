@@ -17,9 +17,17 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
 			method = "shouldRender"
 	) protected boolean shouldRenderLayers(final T entity, final Frustum culler, final double camX, final double camY, final double camZ, Operation<Boolean> original) {
 		boolean result = original.call(entity, culler, camX, camY, camZ);
-		if (!result) return false;
+
+		if (!result) {
+			return false;
+		}
+
 		var data = AreaClientData.getClientLevelData();
-		if (data == null) return true;
-		return !(entity instanceof Player player && data.isInEntityTrackedAreaWith(AreaComponents.SOLO_PLAYER_RENDER, player));
+
+		if (data == null) {
+			return true;
+		}
+
+		return !(entity instanceof Player player && data.isInEntityTrackedAreaWith(AreaComponents.SOLO_PLAYER_RENDER, player) && !player.isLocalPlayer());
 	}
 }
