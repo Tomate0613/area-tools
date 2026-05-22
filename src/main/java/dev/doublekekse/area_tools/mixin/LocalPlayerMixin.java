@@ -79,7 +79,6 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlaye
         var areas = data.getEntityTrackedAreas(this);
         var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(AreaTools.smallestArea());
 
-        System.out.println("found respawn area " + area + " : " + this.showDeathScreen);
         area.ifPresent(value -> cir.setReturnValue(!value.get(AreaComponents.RESPAWN_POINT_COMPONENT).skipDeathScreen));
     }
 }
