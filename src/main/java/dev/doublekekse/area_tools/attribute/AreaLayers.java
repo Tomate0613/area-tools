@@ -41,7 +41,7 @@ public class AreaLayers {
                 this.lastSampledPosition = pos;
 
                 var savedData = AreaLib.getSavedData(level);
-                this.areas = savedData.getSampledAreas(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT, level, pos);
+                this.areas = savedData.getSampledAreas(AreaComponents.ENVIRONMENT_ATTRIBUTES, level, pos);
             }
 
             T value = null;
@@ -58,7 +58,7 @@ public class AreaLayers {
                     continue;
                 }
 
-                var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+                var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES);
 
                 var sampler = ea.getSampler((EnvironmentAttribute<Object>) attribute, level.clockManager(), level);
                 if (sampler != null) {
@@ -102,7 +102,7 @@ public class AreaLayers {
             var overriden = false;
 
             for (var area : savedData.getAreas()) {
-                var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+                var ea = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES);
                 if (ea != null && ea.overridesAttribute(attribute, level)) {
                     overriden = true;
                     break;

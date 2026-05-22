@@ -30,8 +30,8 @@ public class PlayerListMixin {
         double smallestRespawnSize = Double.MAX_VALUE;
 
         for (var area : trackedAreas) {
-            var events = area.get(AreaComponents.EVENTS_COMPONENT);
-            var respawn = area.get(AreaComponents.RESPAWN_POINT_COMPONENT);
+            var events = area.get(AreaComponents.EVENTS);
+            var respawn = area.get(AreaComponents.RESPAWN_POINT);
 
             if (events != null) {
                 AreaTools.runCommands(server, player, events.onDeath);

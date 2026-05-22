@@ -66,7 +66,7 @@ public class AreaToolsCommand {
                     var server = ctx.getSource().getServer();
                     var area = AreaArgument.getArea(ctx, "area");
 
-                    area.remove(server, AreaComponents.RESPAWN_POINT_COMPONENT);
+                    area.remove(server, AreaComponents.RESPAWN_POINT);
 
                     ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint.clear"), false);
 
@@ -90,12 +90,12 @@ public class AreaToolsCommand {
                         return 0;
                     }
 
-                    if (!area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT)) {
-                        area.put(null, AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT, new EnvironmentAttributesComponent());
+                    if (!area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES)) {
+                        area.put(null, AreaComponents.ENVIRONMENT_ATTRIBUTES, new EnvironmentAttributesComponent());
                     }
 
                     //noinspection unchecked
-                    area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT).attributes.put((EnvironmentAttribute<Object>) environmentAttribute.value(), parsed.getOrThrow());
+                    area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES).attributes.put((EnvironmentAttribute<Object>) environmentAttribute.value(), parsed.getOrThrow());
                     area.invalidate(ctx.getSource().getServer());
 
                     ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.set", environmentAttribute.key().identifier().toString(), area.toString(), value.toString()), true);
@@ -103,7 +103,7 @@ public class AreaToolsCommand {
                 })))).then(literal("reset").then(argument("environment_attribute", ResourceArgument.resource(commandBuildContext, Registries.ENVIRONMENT_ATTRIBUTE)).executes(ctx -> {
                     var area = AreaArgument.getArea(ctx, "area");
                     var environmentAttribute = ResourceArgument.getResource(ctx, "environment_attribute", Registries.ENVIRONMENT_ATTRIBUTE);
-                    var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+                    var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES);
 
                     if (c == null) {
                         ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.error_no_component"));
@@ -121,18 +121,18 @@ public class AreaToolsCommand {
                         var timeline = ResourceArgument.getTimeline(ctx, "timeline");
                         var area = AreaArgument.getArea(ctx, "area");
 
-                        if (!area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT)) {
-                            area.put(null, AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT, new EnvironmentAttributesComponent());
+                        if (!area.has(AreaComponents.ENVIRONMENT_ATTRIBUTES)) {
+                            area.put(null, AreaComponents.ENVIRONMENT_ATTRIBUTES, new EnvironmentAttributesComponent());
                         }
 
-                        area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT).setTimeline(timeline);
+                        area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES).setTimeline(timeline);
                         area.invalidate(ctx.getSource().getServer());
 
                         ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.environment_attribute.timeline.set", area.toString(), timeline.key().identifier().toString()), true);
                         return 1;
                     }))).then(literal("reset").executes(ctx -> {
                         var area = AreaArgument.getArea(ctx, "area");
-                        var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+                        var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES);
 
                         if (c == null) {
                             ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.environment_attribute.error_no_component"));
@@ -158,14 +158,14 @@ public class AreaToolsCommand {
     }
 
     private static void cleanupEnvironmentAttributesComponent(Area area) {
-        var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+        var c = area.get(AreaComponents.ENVIRONMENT_ATTRIBUTES);
 
         if (c == null) {
             return;
         }
 
         if (c.isEmpty()) {
-            area.remove(null, AreaComponents.ENVIRONMENT_ATTRIBUTES_COMPONENT);
+            area.remove(null, AreaComponents.ENVIRONMENT_ATTRIBUTES);
         }
     }
 
@@ -173,7 +173,7 @@ public class AreaToolsCommand {
         var server = ctx.getSource().getServer();
         var area = AreaArgument.getArea(ctx, "area");
 
-        area.put(server, AreaComponents.RESPAWN_POINT_COMPONENT, component);
+        area.put(server, AreaComponents.RESPAWN_POINT, component);
 
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools.spawnpoint"), false);
 
@@ -185,10 +185,10 @@ public class AreaToolsCommand {
             var server = ctx.getSource().getServer();
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
-            var component = area.getOrDefault(AreaComponents.EVENTS_COMPONENT, new EventsComponent());
+            var component = area.getOrDefault(AreaComponents.EVENTS, new EventsComponent());
 
             lookup.apply(component).add(command);
-            area.put(server, AreaComponents.EVENTS_COMPONENT, component);
+            area.put(server, AreaComponents.EVENTS, component);
 
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools." + trackEvent + ".add", command), false);
 
@@ -198,7 +198,7 @@ public class AreaToolsCommand {
             var area = AreaArgument.getArea(ctx, "area");
             var command = StringArgumentType.getString(ctx, "command");
 
-            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+            var component = area.get(AreaComponents.EVENTS);
 
             if (component == null) {
                 ctx.getSource().sendFailure(Component.translatable("commands.area_tools.area_tools.track_event.no_events"));
@@ -209,13 +209,13 @@ public class AreaToolsCommand {
             ctx.getSource().sendSuccess(() -> Component.translatable("commands.area_tools.area_tools." + trackEvent + ".remove", command), false);
 
             if (component.isEmpty()) {
-                area.remove(server, AreaComponents.EVENTS_COMPONENT);
+                area.remove(server, AreaComponents.EVENTS);
             }
 
             return 1;
         })))).then(literal("list").then(argument("area", IdentifierArgument.id()).suggests(AreaArgument::listSuggestions).executes(ctx -> {
             var area = AreaArgument.getArea(ctx, "area");
-            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+            var component = area.get(AreaComponents.EVENTS);
 
 
             if (component == null) {

@@ -60,7 +60,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
         var oldItems = oldTrackedAreas.stream().filter(a -> !trackItems.contains(a));
 
         newItems.forEach(area -> {
-            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+            var component = area.get(AreaComponents.EVENTS);
 
             if (component != null) {
                 AreaTools.runCommands(server, this, component.onEnter);
@@ -68,7 +68,7 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
         });
 
         oldItems.forEach(area -> {
-            var component = area.get(AreaComponents.EVENTS_COMPONENT);
+            var component = area.get(AreaComponents.EVENTS);
 
             if (component != null) {
                 AreaTools.runCommands(server, this, component.onExit);

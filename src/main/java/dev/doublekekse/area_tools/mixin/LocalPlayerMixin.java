@@ -77,8 +77,8 @@ public class LocalPlayerMixin extends AbstractClientPlayer implements LocalPlaye
     void shouldShowDeathScreen(CallbackInfoReturnable<Boolean> cir) {
         var data = AreaClientData.getClientLevelData();
         var areas = data.getEntityTrackedAreas(this);
-        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT_COMPONENT)).min(AreaTools.smallestArea());
+        var area = areas.stream().filter(a -> a.has(AreaComponents.RESPAWN_POINT)).min(AreaTools.smallestArea());
 
-        area.ifPresent(value -> cir.setReturnValue(!value.get(AreaComponents.RESPAWN_POINT_COMPONENT).skipDeathScreen));
+        area.ifPresent(value -> cir.setReturnValue(!value.get(AreaComponents.RESPAWN_POINT).skipDeathScreen));
     }
 }

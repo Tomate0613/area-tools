@@ -21,7 +21,7 @@ public class AreaToolsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        LevelRenderEvents.BEFORE_GIZMOS.register((context) -> {
+        LevelRenderEvents.BEFORE_GIZMOS.register((_) -> {
             var player = Minecraft.getInstance().player;
 
             if (player == null) {
@@ -44,7 +44,7 @@ public class AreaToolsClient implements ClientModInitializer {
 
     private static void renderSpawnpointSetter(Level level) {
         for (var area : AreaLib.getSavedData(level).getAreas()) {
-            var component = area.get(AreaComponents.RESPAWN_POINT_COMPONENT);
+            var component = area.get(AreaComponents.RESPAWN_POINT);
 
             if (component == null) {
                 continue;
