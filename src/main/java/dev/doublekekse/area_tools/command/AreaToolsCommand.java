@@ -43,6 +43,7 @@ public class AreaToolsCommand {
 
         trackEvent("on_enter", base, (track) -> track.onEnter);
         trackEvent("on_exit", base, (track) -> track.onExit);
+        trackEvent("on_death", base, (track) -> track.onDeath);
 
         dispatcher.register(
             base.then(

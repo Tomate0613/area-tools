@@ -18,8 +18,8 @@ public final class AreaComponents {
     public static final EntityTrackedAreaComponentType<Unit> NO_PUSHING = registerEntityTracked("no_pushing", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PICK = registerEntityTracked("no_player_pick", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> PVP_TOGGLED = registerEntityTracked("pvp_toggled", Unit.CODEC);
+    public static final EntityTrackedAreaComponentType<RespawnPointComponent> RESPAWN_POINT_COMPONENT = registerEntityTracked("respawn_point", RespawnPointComponent.CODEC);
 
-    public static final SampledAreaComponentType<RespawnPointComponent> RESPAWN_POINT_COMPONENT = registerSampled("respawn_point", RespawnPointComponent.CODEC);
     public static final SampledAreaComponentType<EnvironmentAttributesComponent> ENVIRONMENT_ATTRIBUTES_COMPONENT = registerSampled("environment_attributes", EnvironmentAttributesComponent.CODEC);
 
     private static <T> EntityTrackedAreaComponentType<T> registerEntityTracked(String path, Codec<T> codec) {

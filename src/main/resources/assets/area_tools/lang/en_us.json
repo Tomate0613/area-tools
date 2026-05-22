@@ -16,6 +16,9 @@
   "commands.area_tools.area_tools.on_exit.add": "Added %s to on_exit",
   "commands.area_tools.area_tools.on_exit.remove": "Removed %s from on_exit",
 
+  "commands.area_tools.area_tools.on_death.add": "Added %s to on_death",
+  "commands.area_tools.area_tools.on_death.remove": "Removed %s from on_death",
+
   "commands.area_tools.area_tools.track_event.no_events": "No events",
 
   "commands.area_tools.area_tools.track_event.list.remove": "[remove]",
