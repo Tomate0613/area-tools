@@ -9,6 +9,7 @@ import dev.doublekekse.area_tools.component.area.EnvironmentAttributesComponent;
 import dev.doublekekse.area_tools.component.area.EventsComponent;
 import dev.doublekekse.area_tools.component.area.RespawnPointComponent;
 import net.minecraft.util.Unit;
+import net.minecraft.world.Difficulty;
 
 public final class AreaComponents {
     public static final EntityTrackedAreaComponentType<EventsComponent> EVENTS = registerEntityTracked("events", EventsComponent.CODEC);
@@ -19,6 +20,9 @@ public final class AreaComponents {
     public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PICK = registerEntityTracked("no_player_pick", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> PVP_TOGGLED = registerEntityTracked("pvp_toggled", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<RespawnPointComponent> RESPAWN_POINT = registerEntityTracked("respawn_point", RespawnPointComponent.CODEC);
+    public static final EntityTrackedAreaComponentType<Float> FORCE_SCALE = registerEntityTracked("force_scale", Codec.FLOAT);
+    public static final EntityTrackedAreaComponentType<Difficulty> FOOD_DIFFICULTY = registerEntityTracked("food_difficulty", Difficulty.CODEC);
+    public static final EntityTrackedAreaComponentType<Unit> LOCAL_DEATH_MESSAGES = registerEntityTracked("local_death_messages", Unit.CODEC);
 
     public static final SampledAreaComponentType<EnvironmentAttributesComponent> ENVIRONMENT_ATTRIBUTES = registerSampled("environment_attributes", EnvironmentAttributesComponent.CODEC);
 

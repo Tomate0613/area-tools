@@ -9,6 +9,7 @@
     "EntitySelectorOptionsMixin",
     "EntitySelectorParserMixin",
     "EnvironmentAttributeSystemMixin",
+    "FoodDataMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerListMixin",
