@@ -18,6 +18,7 @@ public final class AreaComponents {
     public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PARTICLES = registerEntityTracked("no_player_particles", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> NO_PUSHING = registerEntityTracked("no_pushing", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<Unit> NO_PLAYER_PICK = registerEntityTracked("no_player_pick", Unit.CODEC);
+    // TODO: This should really be a pvp override instead
     public static final EntityTrackedAreaComponentType<Unit> PVP_TOGGLED = registerEntityTracked("pvp_toggled", Unit.CODEC);
     public static final EntityTrackedAreaComponentType<RespawnPointComponent> RESPAWN_POINT = registerEntityTracked("respawn_point", RespawnPointComponent.CODEC);
     public static final EntityTrackedAreaComponentType<Float> FORCE_SCALE = registerEntityTracked("force_scale", Codec.FLOAT);
