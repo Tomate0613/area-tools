@@ -64,7 +64,7 @@ public class AreaToolsClient implements ClientModInitializer {
     public static void openChatScreen(String initial, int selectFrom, int selectTo) {
         Minecraft.getInstance().execute(() -> {
             var screen = new ChatScreen(initial, false);
-            Minecraft.getInstance().setScreen(screen);
+            Minecraft.getInstance().setScreenAndShow(screen);
 
             ((ChatScreenDuck) screen).area_tools$setCursorPosition(selectFrom, selectTo);
         });

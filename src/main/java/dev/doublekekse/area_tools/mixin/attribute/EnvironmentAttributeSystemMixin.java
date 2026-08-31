@@ -1,4 +1,4 @@
-package dev.doublekekse.area_tools.mixin;
+package dev.doublekekse.area_tools.mixin.attribute;
 
 import dev.doublekekse.area_tools.attribute.AreaLayers;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EnvironmentAttributeSystem.class)
 public class EnvironmentAttributeSystemMixin {
-    @Inject(method = "addDefaultLayers", at = @At("RETURN"))
-    private static void addDefaultLayers(EnvironmentAttributeSystem.Builder builder, Level level, CallbackInfo ci) {
+    @Inject(method = "addDynamicLayers", at = @At("RETURN"))
+    private static void addDynamicLayers(EnvironmentAttributeSystem.Builder builder, Level level, CallbackInfo ci) {
         var areaLayers = new AreaLayers(level);
         var reg = BuiltInRegistries.ENVIRONMENT_ATTRIBUTE;
 

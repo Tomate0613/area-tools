@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState>  {
 	@WrapMethod(
 			method = "shouldRender"
-	) protected boolean shouldRenderLayers(final T entity, final Frustum culler, final double camX, final double camY, final double camZ, Operation<Boolean> original) {
-		boolean result = original.call(entity, culler, camX, camY, camZ);
+	) protected boolean shouldRenderLayers(T entity, Frustum culler, double camX, double camY, double camZ, float partialTicks, Operation<Boolean> original) {
+		boolean result = original.call(entity, culler, camX, camY, camZ, partialTicks);
 
 		if (!result) {
 			return false;

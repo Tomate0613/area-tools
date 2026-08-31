@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,7 +33,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @WrapOperation(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"))
     <T extends ParticleOptions> int addFallParticles(ServerLevel instance, T particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed, Operation<Integer> original) {
-        if (is(EntityType.PLAYER)) {
+        if (is(EntityTypes.PLAYER)) {
             var data = AreaLib.getSavedData(level());
             var noParticles = data.isInEntityTrackedAreaWith(AreaComponents.NO_PLAYER_PARTICLES, this);
 
@@ -63,7 +64,7 @@ public abstract class LivingEntityMixin extends Entity {
     float getScale(Operation<Float> original) {
         var orig = original.call();
 
-        if (!is(EntityType.PLAYER)) {
+        if (!is(EntityTypes.PLAYER)) {
             return orig;
         }
 

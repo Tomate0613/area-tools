@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +32,7 @@ public class MultiPlayerGameModeMixin {
         var component = components.get(AreaItemComponents.CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(minecraft.level, pos.getCenter())) {
+        if (!component.isInArea(minecraft.level, Vec3.atCenterOf(pos))) {
             cir.setReturnValue(false);
         }
     }

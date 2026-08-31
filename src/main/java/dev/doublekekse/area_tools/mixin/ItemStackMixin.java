@@ -15,6 +15,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -100,7 +101,7 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         var component = get(CAN_USE_IN_AREA);
         assert component != null;
 
-        if (!component.isInArea(level, pos.getCenter())) {
+        if (!component.isInArea(level, Vec3.atCenterOf(pos))) {
             ci.cancel();
         }
     }

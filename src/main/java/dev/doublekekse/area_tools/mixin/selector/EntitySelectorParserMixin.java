@@ -1,4 +1,4 @@
-package dev.doublekekse.area_tools.mixin;
+package dev.doublekekse.area_tools.mixin.selector;
 
 import dev.doublekekse.area_tools.duck.EntitySelectorDuck;
 import dev.doublekekse.area_tools.duck.EntitySelectorParserDuck;

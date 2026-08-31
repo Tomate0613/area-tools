@@ -5,7 +5,6 @@ import dev.doublekekse.area_tools.client.AreaToolsClient;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +15,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+import oshi.util.tuples.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,23 +73,23 @@ public class AreaCreatorItem extends Item {
         return AABB.encapsulatingFullBlocks(positions.get(0), positions.get(1));
     }
 
-    private static Tuple<Vec3, Double> getSphere(Player player) {
-        var firstPos = getPos(player).getCenter();
-        var secondPos = getPos(player).getCenter();
+    private static Pair<Vec3, Double> getSphere(Player player) {
+        var firstPos = Vec3.atCenterOf(getPos(player));
+        var secondPos = Vec3.atCenterOf(getPos(player));
 
         if (!positions.isEmpty()) {
-            firstPos = positions.getFirst().getCenter();
+            firstPos = Vec3.atCenterOf(positions.getFirst());
         }
 
         if (positions.size() > 1) {
-            secondPos = positions.get(1).getCenter();
+            secondPos = Vec3.atCenterOf(positions.get(1));
         }
 
         if (firstPos.equals(secondPos)) {
             secondPos = secondPos.add(0, 0, 1);
         }
 
-        return new Tuple<>(firstPos, secondPos.distanceTo(firstPos));
+        return new Pair<>(firstPos, secondPos.distanceTo(firstPos));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class AreaCreatorItem extends Item {
         return aabb.minX + " " + aabb.minY + " " + aabb.minZ + " " + aabb.maxX + " " + aabb.maxY + " " + aabb.maxZ;
     }
 
-    private String toCommandString(Tuple<Vec3, Double> sphere) {
+    private String toCommandString(Pair<Vec3, Double> sphere) {
         var pos = sphere.getA();
         return pos.x + " " + pos.y + " " + pos.z + " " + sphere.getB();
     }
@@ -141,9 +141,8 @@ public class AreaCreatorItem extends Item {
         var style = GizmoStyle.stroke(-1);
 
         switch (mode) {
-            case BOX -> {
-                Gizmos.cuboid(getBoxAABB(player), style);
-            }
+            case BOX -> Gizmos.cuboid(getBoxAABB(player), style);
+
             case SPHERE -> {
                 var sphere = getSphere(player);
                 Gizmos.addGizmo(new SphereGizmo(sphere.getA(), sphere.getB(), style));

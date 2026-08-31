@@ -1,10 +1,10 @@
-package dev.doublekekse.area_tools.mixin;
+package dev.doublekekse.area_tools.mixin.selector;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doublekekse.area_lib.AreaLib;
 import dev.doublekekse.area_tools.duck.EntitySelectorDuck;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -39,8 +39,6 @@ public class SelectorEntitySelectorMixin implements EntitySelectorDuck {
 
         return filterRange;
     }
-
-    //List<Predicate<Entity>>
 
     @WrapOperation(method = "getPredicate", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 2))
     boolean getPredicate(List<Predicate<Entity>> predicates, Object o, Operation<Boolean> original) {
