@@ -20,7 +20,8 @@ public record LootItemEntityAreaCondition(
     @Override
     public boolean test(LootContext lootContext) {
         var area = AreaLib.getServerArea(lootContext.getLevel().getServer(), areaId);
-        return area != null && area.contains(lootContext.getParameter(this.entityTarget.contextParam()));
+        var entity = lootContext.getOptional(this.entityTarget.contextParam());
+        return area != null && entity != null && area.contains(entity);
     }
 
     @Override
