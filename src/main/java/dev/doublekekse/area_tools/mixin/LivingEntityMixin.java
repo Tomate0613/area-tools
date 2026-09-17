@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doublekekse.area_lib.AreaLib;
+import dev.doublekekse.area_lib.ExperimentalAreaUtils;
 import dev.doublekekse.area_tools.registry.AreaComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -68,33 +69,8 @@ public abstract class LivingEntityMixin extends Entity {
         }
 
         var areas = AreaLib.getSavedData(level()).getEntityTrackedAreas(this);
+        var scale = ExperimentalAreaUtils.componentFor(AreaComponents.FORCE_SCALE, areas);
 
-        var smallest = Double.MAX_VALUE;
-        Float scale = orig;
-
-        for (var area : areas) {
-            var bb = area.getBoundingBox();
-
-            if (bb == null) {
-                continue;
-            }
-
-            var size = bb.getSize();
-
-            if (size >= smallest) {
-                continue;
-            }
-
-            var s = area.get(AreaComponents.FORCE_SCALE);
-
-            if (s == null) {
-                continue;
-            }
-
-            scale = s;
-            smallest = size;
-        }
-
-        return scale;
+        return scale == null ? orig : scale;
     }
 }
