@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.authlib.GameProfile;
 import dev.doublekekse.area_lib.Area;
 import dev.doublekekse.area_lib.AreaLib;
+import dev.doublekekse.area_lib.ExperimentalAreaUtils;
 import dev.doublekekse.area_lib.data.AreaSavedData;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.duck.ServerPlayerDuck;
@@ -110,36 +111,14 @@ public abstract class ServerPlayerMixin extends Player implements ServerPlayerDu
     void broadcastSystemMessage(PlayerList instance, Component message, boolean overlay, Operation<Void> original) {
         var areas = AreaLib.getSavedData(level()).getEntityTrackedAreas(this);
 
-        Area smallestArea = null;
-        double smallest = Double.MAX_VALUE;
-        for (var area : areas) {
-            var bb = area.getBoundingBox();
-
-            if (bb == null) {
-                continue;
-            }
-
-            var size = bb.getSize();
-            if (size >= smallest) {
-                continue;
-            }
-
-            if (!area.has(AreaComponents.LOCAL_DEATH_MESSAGES)) {
-                continue;
-            }
-
-            smallest = size;
-            smallestArea = area;
-        }
+        var smallestArea = ExperimentalAreaUtils.areaFor(AreaComponents.LOCAL_DEATH_MESSAGES, areas);
 
         if (smallestArea == null) {
             original.call(instance, message, overlay);
             return;
         }
 
-        Area finalSmallestArea = smallestArea;
-
         //noinspection DataFlowIssue (very intentionally we can pass in null here to only show the message to some players)
-        instance.broadcastSystemMessage(message, player -> finalSmallestArea.contains(player) ? message : null, overlay);
+        instance.broadcastSystemMessage(message, player -> smallestArea.contains(player) ? message : null, overlay);
     }
 }

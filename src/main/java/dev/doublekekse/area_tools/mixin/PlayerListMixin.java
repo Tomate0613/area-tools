@@ -3,6 +3,7 @@ package dev.doublekekse.area_tools.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.doublekekse.area_lib.AreaLib;
+import dev.doublekekse.area_lib.ExperimentalAreaUtils;
 import dev.doublekekse.area_tools.AreaTools;
 import dev.doublekekse.area_tools.component.area.RespawnPointComponent;
 import dev.doublekekse.area_tools.registry.AreaComponents;
@@ -26,32 +27,14 @@ public class PlayerListMixin {
     TeleportTransition respawn(ServerPlayer player, boolean consumeSpawnBlock, TeleportTransition.PostTeleportTransition postTeleportTransition, Operation<TeleportTransition> original) {
         var trackedAreas = AreaLib.getSavedData(player.level()).getEntityTrackedAreas(player);
 
-        RespawnPointComponent smallestRespawn = null;
-        double smallestRespawnSize = Double.MAX_VALUE;
-
         for (var area : trackedAreas) {
             var events = area.get(AreaComponents.EVENTS);
-            var respawn = area.get(AreaComponents.RESPAWN_POINT);
-
             if (events != null) {
                 AreaTools.runCommands(server, player, events.onDeath);
             }
-
-            if (respawn != null) {
-               var bb = area.getBoundingBox();
-
-               if(bb == null) {
-                   continue;
-               }
-
-               var size = bb.getSize();
-
-               if(size < smallestRespawnSize) {
-                   smallestRespawn = respawn;
-                   smallestRespawnSize = size;
-               }
-            }
         }
+
+        var smallestRespawn = ExperimentalAreaUtils.componentFor(AreaComponents.RESPAWN_POINT, trackedAreas);
 
         if (smallestRespawn == null) {
             return original.call(player, consumeSpawnBlock, postTeleportTransition);
